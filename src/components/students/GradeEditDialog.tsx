@@ -68,7 +68,7 @@ export const GradeEditDialog = ({ student, isOpen, onClose, onUpdateGrade }: Gra
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[85vh] w-[95vw] sm:w-full overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Calculator className="w-5 h-5" />
@@ -93,7 +93,7 @@ export const GradeEditDialog = ({ student, isOpen, onClose, onUpdateGrade }: Gra
                   <CardTitle className="text-lg">{index + 1}º Trimestre</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                     {disciplines.map((discipline) => (
                       <div key={discipline.key} className="space-y-2">
                         <Label htmlFor={`${trimestre}-${discipline.key}`}>

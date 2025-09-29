@@ -1,71 +1,98 @@
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Home, Users, FileText, Settings, GraduationCap } from "lucide-react";
+import { Home, Users, FileText, GraduationCap } from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
+  useSidebar,
+} from "@/components/ui/sidebar";
 
-interface SidebarProps {
+interface AppSidebarProps {
   currentPage: string;
   onNavigate: (page: string) => void;
 }
 
-export const Sidebar = ({ currentPage, onNavigate }: SidebarProps) => {
-  const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: Home },
-    { id: "students", label: "Gestão de Alunos", icon: Users },
-    { id: "grades", label: "Notas e Avaliações", icon: FileText },
-    { id: "reports", label: "Relatórios", icon: GraduationCap },
-  ];
+const menuItems = [
+  { id: "dashboard", label: "Dashboard", icon: Home },
+  { id: "students", label: "Gestão de Alunos", icon: Users },
+  { id: "grades", label: "Notas", icon: FileText },
+  { id: "reports", label: "Relatórios", icon: GraduationCap },
+];
+
+export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
   return (
-    <div className="w-64 h-screen bg-card border-r border-border flex flex-col">
+    <Sidebar collapsible="icon">
       {/* Header */}
-      <div className="p-6 border-b border-border">
+      <SidebarHeader className="border-b border-border p-4">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center flex-shrink-0">
             <GraduationCap className="w-6 h-6 text-primary-foreground" />
           </div>
-          <div>
-            <h1 className="font-bold text-lg text-foreground">Escola Nova Geração</h1>
-            <p className="text-sm text-muted-foreground">Sistema de Gestão</p>
+          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
+            <h1 className="font-bold text-lg text-foreground truncate">
+              Escola Nova Geração
+            </h1>
+            <p className="text-sm text-muted-foreground truncate">
+              Sistema de Gestão
+            </p>
           </div>
         </div>
-      </div>
+      </SidebarHeader>
 
-      {/* Navigation */}
-      <nav className="flex-1 p-4">
-        <div className="space-y-2">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = currentPage === item.id;
-            
-            return (
-              <Button
-                key={item.id}
-                variant={isActive ? "default" : "ghost"}
-                className={cn(
-                  "w-full justify-start text-left h-12 px-4",
-                  isActive 
-                    ? "bg-primary text-primary-foreground shadow-sm" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                )}
-                onClick={() => onNavigate(item.id)}
-              >
-                <Icon className="w-5 h-5 mr-3" />
-                {item.label}
-              </Button>
-            );
-          })}
-        </div>
-      </nav>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>
+            Navegação
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {menuItems.map((item) => {
+                const Icon = item.icon;
+                const active = currentPage === item.id;
+                
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      isActive={active}
+                      tooltip={isCollapsed ? item.label : undefined}
+                      onClick={() => onNavigate(item.id)}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
       {/* Footer */}
-      <div className="p-4 border-t border-border">
+      <SidebarFooter className="border-t border-border p-4">
         <div className="flex items-center justify-center">
           <div className="text-center">
-            <p className="text-xs text-muted-foreground">Sistema Offline</p>
-            <p className="text-xs text-muted-foreground">© {new Date().getFullYear()}</p>
+            <div className="group-data-[collapsible=icon]:hidden">
+              <p className="text-xs text-muted-foreground">Sistema Offline</p>
+              <p className="text-xs text-muted-foreground">
+                © {new Date().getFullYear()}
+              </p>
+            </div>
+            <div className="hidden group-data-[collapsible=icon]:block">
+              <div className="w-2 h-2 bg-success rounded-full mx-auto" title="Sistema Online" />
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </SidebarFooter>
+    </Sidebar>
   );
-};
+}

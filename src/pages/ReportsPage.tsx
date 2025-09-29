@@ -200,7 +200,7 @@ export const ReportsPage = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Classe</label>
               <Select value={selectedClass} onValueChange={setSelectedClass}>
@@ -218,12 +218,12 @@ export const ReportsPage = () => {
 
             <div className="space-y-2">
               <label className="text-sm font-medium">Ações</label>
-              <div className="flex space-x-2">
-                <Button onClick={exportToCSV} variant="outline" size="sm">
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <Button onClick={exportToCSV} variant="outline" size="sm" className="w-full sm:w-auto">
                   <Download className="w-4 h-4 mr-2" />
                   Exportar CSV
                 </Button>
-                <Button onClick={printReport} variant="outline" size="sm">
+                <Button onClick={printReport} variant="outline" size="sm" className="w-full sm:w-auto">
                   <Printer className="w-4 h-4 mr-2" />
                   Imprimir
                 </Button>
@@ -234,7 +234,7 @@ export const ReportsPage = () => {
       </Card>
 
       {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-3">
@@ -312,44 +312,88 @@ export const ReportsPage = () => {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left p-3 font-medium text-muted-foreground">Nº</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Nome</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Classe</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Turma</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Curso</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Média</th>
-                    <th className="text-left p-3 font-medium text-muted-foreground">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reportData.map((student, index) => (
-                    <tr key={index} className="border-b border-border hover:bg-muted/30">
-                      <td className="p-3">{student.numero}</td>
-                      <td className="p-3 font-medium">{student.nome}</td>
-                      <td className="p-3">{student.classe}</td>
-                      <td className="p-3">{student.turma}</td>
-                      <td className="p-3">{student.curso}</td>
-                      <td className="p-3 font-mono">{student.media.toFixed(1)}</td>
-                      <td className="p-3">
-                        <Badge 
-                          variant={
-                            student.status === "Aprovado" ? "default" : 
-                            student.status === "Reprovado" ? "destructive" : 
-                            "secondary"
-                          }
-                        >
-                          {student.status}
-                        </Badge>
-                      </td>
+            <>
+              {/* Desktop Table */}
+              <div className="hidden lg:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left p-3 font-medium text-muted-foreground">Nº</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Nome</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Classe</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Turma</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Curso</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Média</th>
+                      <th className="text-left p-3 font-medium text-muted-foreground">Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {reportData.map((student, index) => (
+                      <tr key={index} className="border-b border-border hover:bg-muted/30">
+                        <td className="p-3">{student.numero}</td>
+                        <td className="p-3 font-medium">{student.nome}</td>
+                        <td className="p-3">{student.classe}</td>
+                        <td className="p-3">{student.turma}</td>
+                        <td className="p-3">{student.curso}</td>
+                        <td className="p-3 font-mono">{student.media.toFixed(1)}</td>
+                        <td className="p-3">
+                          <Badge 
+                            variant={
+                              student.status === "Aprovado" ? "default" : 
+                              student.status === "Reprovado" ? "destructive" : 
+                              "secondary"
+                            }
+                          >
+                            {student.status}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Cards */}
+              <div className="lg:hidden space-y-4">
+                {reportData.map((student, index) => (
+                  <Card key={index} className="p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h4 className="font-semibold text-foreground">{student.nome}</h4>
+                        <p className="text-sm text-muted-foreground">Nº {student.numero}</p>
+                      </div>
+                      <Badge 
+                        variant={
+                          student.status === "Aprovado" ? "default" : 
+                          student.status === "Reprovado" ? "destructive" : 
+                          "secondary"
+                        }
+                      >
+                        {student.status}
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Classe:</span>
+                        <span className="ml-1 font-medium">{student.classe}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Turma:</span>
+                        <span className="ml-1 font-medium">{student.turma}</span>
+                      </div>
+                      <div className="col-span-2">
+                        <span className="text-muted-foreground">Curso:</span>
+                        <span className="ml-1 font-medium">{student.curso}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Média:</span>
+                        <span className="ml-1 font-mono font-bold">{student.media.toFixed(1)}</span>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </>
           )}
         </CardContent>
       </Card>

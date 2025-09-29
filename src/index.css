@@ -128,5 +128,29 @@ Todas as cores DEVEM ser HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-size: 16px; /* Garantir tamanho mínimo legível em mobile */
+  }
+
+  /* Melhorias para mobile */
+  @media (max-width: 768px) {
+    .container {
+      @apply px-4;
+    }
+    
+    /* Evitar zoom em inputs no iOS */
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+
+  /* Melhor suporte a touch */
+  @media (hover: none) {
+    .hover\:bg-muted\/30:hover {
+      background-color: transparent;
+    }
   }
 }

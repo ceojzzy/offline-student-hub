@@ -67,8 +67,8 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
       
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2 sm:col-span-2 md:col-span-1">
               <Label htmlFor="nome">Nome Completo *</Label>
               <Input
                 id="nome"
@@ -148,8 +148,8 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
             </div>
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4">
-            <Button type="button" variant="outline" onClick={onCancel}>
+          <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4">
+            <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto">
               Cancelar
             </Button>
             <Button type="submit" className="bg-primary hover:bg-primary-glow">
