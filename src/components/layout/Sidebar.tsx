@@ -1,4 +1,4 @@
-import { Home, Users, FileText, GraduationCap } from "lucide-react";
+import { Home, Users, FileText, GraduationCap, UserPlus } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +21,7 @@ interface AppSidebarProps {
 const menuItems = [
   { id: "dashboard", label: "Dashboard", icon: Home },
   { id: "students", label: "Gestão de Alunos", icon: Users },
+  { id: "add-student", label: "Cadastrar Aluno", icon: UserPlus },
   { id: "grades", label: "Notas", icon: FileText },
   { id: "reports", label: "Relatórios", icon: GraduationCap },
 ];

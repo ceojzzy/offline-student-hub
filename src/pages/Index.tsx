@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/s
 import { AppSidebar } from "@/components/layout/Sidebar";
 import { Dashboard } from "@/pages/Dashboard";
 import { StudentsPage } from "@/pages/StudentsPage";
+import { AddStudentPage } from "@/pages/AddStudentPage";
 import { GradesPage } from "@/pages/GradesPage";
 import { ReportsPage } from "@/pages/ReportsPage";
 import { useStudents } from "@/hooks/useStudents";
@@ -19,6 +20,8 @@ const Index = () => {
         return <Dashboard students={students} />;
       case "students":
         return <StudentsPage />;
+      case "add-student":
+        return <AddStudentPage />;
       case "grades":
         return <GradesPage />;
       case "reports":
@@ -59,6 +62,7 @@ const Index = () => {
 const menuItems = [
   { id: "dashboard", label: "Dashboard" },
   { id: "students", label: "Gestão de Alunos" },
+  { id: "add-student", label: "Cadastrar Aluno" },
   { id: "grades", label: "Notas" },
   { id: "reports", label: "Relatórios" },
 ];

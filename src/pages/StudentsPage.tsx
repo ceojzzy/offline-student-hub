@@ -5,6 +5,7 @@ import { StudentForm } from "@/components/forms/StudentForm";
 import { ClassGroup } from "@/components/students/ClassGroup";
 import { useStudents } from "@/hooks/useStudents";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import { Search, UserPlus } from "lucide-react";
 
 export const StudentsPage = () => {
@@ -19,6 +20,7 @@ export const StudentsPage = () => {
     searchStudents 
   } = useStudents();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleAddStudent = (studentData: any) => {
     try {
@@ -104,7 +106,7 @@ export const StudentsPage = () => {
         </div>
         
         <Button 
-          onClick={() => setShowForm(true)}
+          onClick={() => navigate("/add-student")}
           className="bg-primary hover:bg-primary-glow"
         >
           <UserPlus className="w-4 h-4 mr-2" />
@@ -142,7 +144,7 @@ export const StudentsPage = () => {
               Comece cadastrando o primeiro aluno do sistema
             </p>
             <Button 
-              onClick={() => setShowForm(true)}
+              onClick={() => navigate("/add-student")}
               className="bg-primary hover:bg-primary-glow"
             >
               <UserPlus className="w-4 h-4 mr-2" />
