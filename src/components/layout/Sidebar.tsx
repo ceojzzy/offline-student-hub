@@ -1,4 +1,5 @@
 import { Home, Users, FileText, GraduationCap, UserPlus } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -13,21 +14,18 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-interface AppSidebarProps {
-  currentPage: string;
-  onNavigate: (page: string) => void;
-}
-
 const menuItems = [
-  { id: "dashboard", label: "Dashboard", icon: Home },
-  { id: "students", label: "Gestão de Alunos", icon: Users },
-  { id: "add-student", label: "Cadastrar Aluno", icon: UserPlus },
-  { id: "grades", label: "Notas", icon: FileText },
-  { id: "reports", label: "Relatórios", icon: GraduationCap },
+  { id: "/", label: "Dashboard", icon: Home },
+  { id: "/students", label: "Gestão de Alunos", icon: Users },
+  { id: "/add-student", label: "Cadastrar Aluno", icon: UserPlus },
+  { id: "/grades", label: "Notas", icon: FileText },
+  { id: "/reports", label: "Relatórios", icon: GraduationCap },
 ];
 
-export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
+export function AppSidebar() {
   const { state } = useSidebar();
+  const navigate = useNavigate();
+  const location = useLocation();
   const isCollapsed = state === "collapsed";
 
   return (
@@ -58,14 +56,14 @@ export function AppSidebar({ currentPage, onNavigate }: AppSidebarProps) {
             <SidebarMenu>
               {menuItems.map((item) => {
                 const Icon = item.icon;
-                const active = currentPage === item.id;
+                const active = location.pathname === item.id;
                 
                 return (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton
                       isActive={active}
                       tooltip={isCollapsed ? item.label : undefined}
-                      onClick={() => onNavigate(item.id)}
+                      onClick={() => navigate(item.id)}
                     >
                       <Icon className="w-5 h-5" />
                       <span>{item.label}</span>

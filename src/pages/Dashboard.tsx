@@ -1,13 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatsCards } from "@/components/dashboard/StatsCards";
-import { Student } from "@/types/student";
+import { useStudents } from "@/hooks/useStudents";
 import { Calendar, Clock, BookOpen } from "lucide-react";
 
-interface DashboardProps {
-  students: Student[];
-}
-
-export const Dashboard = ({ students }: DashboardProps) => {
+const Dashboard = () => {
+  const { students } = useStudents();
   const recentStudents = students
     .sort((a, b) => b.id - a.id)
     .slice(0, 5);
@@ -136,3 +133,5 @@ export const Dashboard = ({ students }: DashboardProps) => {
     </div>
   );
 };
+
+export default Dashboard;
