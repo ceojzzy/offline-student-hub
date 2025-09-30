@@ -3,6 +3,44 @@ import { Student, StudentFormData, GradeInput } from "@/types/student";
 
 const STORAGE_KEY = "alunos";
 
+const EXAMPLE_STUDENTS: Student[] = [
+  // 10ª Classe - Turma A - Manhã
+  { id: 1, nome: "João Silva", numero: "001", classe: "10ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "15", PPP: "14", MAT: "16" }, trimestre2: { MAC: "16", PPP: "15", MAT: "17" }, trimestre3: { MAC: "17", PPP: "16", MAT: "18" } } },
+  { id: 2, nome: "Maria Santos", numero: "002", classe: "10ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "18", PPP: "17", MAT: "19" }, trimestre2: { MAC: "17", PPP: "18", MAT: "18" }, trimestre3: { MAC: "19", PPP: "18", MAT: "20" } } },
+  { id: 3, nome: "Pedro Costa", numero: "003", classe: "10ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "13", PPP: "12", MAT: "14" }, trimestre2: { MAC: "14", PPP: "13", MAT: "15" }, trimestre3: { MAC: "15", PPP: "14", MAT: "16" } } },
+  
+  // 10ª Classe - Turma B - Tarde
+  { id: 4, nome: "Ana Pereira", numero: "001", classe: "10ª", turma: "B", curso: "Letras", periodo: "Tarde", notas: { trimestre1: { MAC: "16", PPP: "17", MAT: "15" }, trimestre2: { MAC: "17", PPP: "18", MAT: "16" }, trimestre3: { MAC: "18", PPP: "19", MAT: "17" } } },
+  { id: 5, nome: "Carlos Oliveira", numero: "002", classe: "10ª", turma: "B", curso: "Letras", periodo: "Tarde", notas: { trimestre1: { MAC: "14", PPP: "15", MAT: "13" }, trimestre2: { MAC: "15", PPP: "16", MAT: "14" }, trimestre3: { MAC: "16", PPP: "17", MAT: "15" } } },
+  
+  // 11ª Classe - Turma A - Manhã
+  { id: 6, nome: "Sofia Ferreira", numero: "001", classe: "11ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "17", PPP: "18", MAT: "19" }, trimestre2: { MAC: "18", PPP: "19", MAT: "20" }, trimestre3: { MAC: "19", PPP: "20", MAT: "20" } } },
+  { id: 7, nome: "Lucas Almeida", numero: "002", classe: "11ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "15", PPP: "16", MAT: "17" }, trimestre2: { MAC: "16", PPP: "17", MAT: "18" }, trimestre3: { MAC: "17", PPP: "18", MAT: "19" } } },
+  { id: 8, nome: "Beatriz Lima", numero: "003", classe: "11ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "19", PPP: "18", MAT: "20" }, trimestre2: { MAC: "20", PPP: "19", MAT: "20" }, trimestre3: { MAC: "20", PPP: "20", MAT: "20" } } },
+  
+  // 11ª Classe - Turma B - Tarde
+  { id: 9, nome: "Rafael Gomes", numero: "001", classe: "11ª", turma: "B", curso: "Letras", periodo: "Tarde", notas: { trimestre1: { MAC: "16", PPP: "17", MAT: "15" }, trimestre2: { MAC: "17", PPP: "18", MAT: "16" }, trimestre3: { MAC: "18", PPP: "19", MAT: "17" } } },
+  { id: 10, nome: "Juliana Sousa", numero: "002", classe: "11ª", turma: "B", curso: "Letras", periodo: "Tarde", notas: { trimestre1: { MAC: "18", PPP: "19", MAT: "17" }, trimestre2: { MAC: "19", PPP: "20", MAT: "18" }, trimestre3: { MAC: "20", PPP: "20", MAT: "19" } } },
+  
+  // 12ª Classe - Turma A - Manhã
+  { id: 11, nome: "Gabriel Martins", numero: "001", classe: "12ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "17", PPP: "16", MAT: "18" }, trimestre2: { MAC: "18", PPP: "17", MAT: "19" }, trimestre3: { MAC: "19", PPP: "18", MAT: "20" } } },
+  { id: 12, nome: "Isabela Rodrigues", numero: "002", classe: "12ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "19", PPP: "20", MAT: "19" }, trimestre2: { MAC: "20", PPP: "20", MAT: "20" }, trimestre3: { MAC: "20", PPP: "20", MAT: "20" } } },
+  { id: 13, nome: "Mateus Fernandes", numero: "003", classe: "12ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "14", PPP: "15", MAT: "16" }, trimestre2: { MAC: "15", PPP: "16", MAT: "17" }, trimestre3: { MAC: "16", PPP: "17", MAT: "18" } } },
+  
+  // 12ª Classe - Turma B - Tarde
+  { id: 14, nome: "Camila Araújo", numero: "001", classe: "12ª", turma: "B", curso: "Letras", periodo: "Tarde", notas: { trimestre1: { MAC: "18", PPP: "19", MAT: "17" }, trimestre2: { MAC: "19", PPP: "20", MAT: "18" }, trimestre3: { MAC: "20", PPP: "20", MAT: "19" } } },
+  { id: 15, nome: "Felipe Cardoso", numero: "002", classe: "12ª", turma: "B", curso: "Letras", periodo: "Tarde", notas: { trimestre1: { MAC: "15", PPP: "16", MAT: "14" }, trimestre2: { MAC: "16", PPP: "17", MAT: "15" }, trimestre3: { MAC: "17", PPP: "18", MAT: "16" } } },
+  
+  // 13ª Classe - Turma A - Manhã
+  { id: 16, nome: "Larissa Barros", numero: "001", classe: "13ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "19", PPP: "18", MAT: "20" }, trimestre2: { MAC: "20", PPP: "19", MAT: "20" }, trimestre3: { MAC: "20", PPP: "20", MAT: "20" } } },
+  { id: 17, nome: "Thiago Dias", numero: "002", classe: "13ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "16", PPP: "17", MAT: "18" }, trimestre2: { MAC: "17", PPP: "18", MAT: "19" }, trimestre3: { MAC: "18", PPP: "19", MAT: "20" } } },
+  { id: 18, nome: "Amanda Castro", numero: "003", classe: "13ª", turma: "A", curso: "Ciências", periodo: "Manhã", notas: { trimestre1: { MAC: "18", PPP: "19", MAT: "19" }, trimestre2: { MAC: "19", PPP: "20", MAT: "20" }, trimestre3: { MAC: "20", PPP: "20", MAT: "20" } } },
+  
+  // 13ª Classe - Turma B - Tarde
+  { id: 19, nome: "Bruno Mendes", numero: "001", classe: "13ª", turma: "B", curso: "Letras", periodo: "Tarde", notas: { trimestre1: { MAC: "17", PPP: "18", MAT: "16" }, trimestre2: { MAC: "18", PPP: "19", MAT: "17" }, trimestre3: { MAC: "19", PPP: "20", MAT: "18" } } },
+  { id: 20, nome: "Fernanda Pinto", numero: "002", classe: "13ª", turma: "B", curso: "Letras", periodo: "Tarde", notas: { trimestre1: { MAC: "19", PPP: "20", MAT: "18" }, trimestre2: { MAC: "20", PPP: "20", MAT: "19" }, trimestre3: { MAC: "20", PPP: "20", MAT: "20" } } },
+];
+
 export const useStudents = () => {
   const [students, setStudents] = useState<Student[]>([]);
 
@@ -15,6 +53,9 @@ export const useStudents = () => {
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
       }
+    } else {
+      // Se não houver dados salvos, usar dados de exemplo
+      setStudents(EXAMPLE_STUDENTS);
     }
   }, []);
 

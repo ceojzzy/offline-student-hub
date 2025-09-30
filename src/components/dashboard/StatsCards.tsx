@@ -2,12 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, GraduationCap, FileText, TrendingUp } from "lucide-react";
 import { Student } from "@/types/student";
+import { useNavigate } from "react-router-dom";
 
 interface StatsCardsProps {
   students: Student[];
 }
 
 export const StatsCards = ({ students }: StatsCardsProps) => {
+  const navigate = useNavigate();
   const totalStudents = students.length;
   
   const classesCounts = students.reduce((acc, student) => {
@@ -36,28 +38,32 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
       value: totalStudents,
       description: "Alunos cadastrados",
       icon: Users,
-      color: "from-blue-500 to-blue-600"
+      color: "from-blue-500 to-blue-600",
+      onClick: () => navigate('/students')
     },
     {
       title: "Classes Ativas",
       value: totalClasses,
       description: "Classes diferentes",
       icon: GraduationCap,
-      color: "from-green-500 to-green-600"
+      color: "from-green-500 to-green-600",
+      onClick: () => navigate('/students')
     },
     {
       title: "Turmas",
       value: totalTurmas,
       description: "Turmas organizadas",
       icon: FileText,
-      color: "from-purple-500 to-purple-600"
+      color: "from-purple-500 to-purple-600",
+      onClick: () => navigate('/students')
     },
     {
       title: "Com Avaliações",
       value: studentsWithGrades,
       description: "Alunos com notas",
       icon: TrendingUp,
-      color: "from-orange-500 to-orange-600"
+      color: "from-orange-500 to-orange-600",
+      onClick: () => navigate('/grades')
     }
   ];
 
@@ -67,7 +73,11 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
         const Icon = stat.icon;
         
         return (
-          <Card key={index} className="border border-border hover:shadow-md transition-shadow">
+          <Card 
+            key={index} 
+            className="border border-border hover:shadow-lg transition-all cursor-pointer hover:scale-105"
+            onClick={stat.onClick}
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
                 {stat.title}
