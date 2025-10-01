@@ -1,11 +1,23 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { StudentFormData } from "@/types/student";
 import { UserPlus, X } from "lucide-react";
+
+const studentFormSchema = z.object({
+  nome: z.string().min(1, "Nome é obrigatório").max(100, "Nome muito longo"),
+  numero: z.string().min(1, "Número de inscrição é obrigatório"),
+  classe: z.string().optional(),
+  turma: z.string().optional(),
+  curso: z.string().optional(),
+  periodo: z.string().optional()
+});
 
 interface StudentFormProps {
   onSubmit: (data: StudentFormData) => void;
@@ -14,37 +26,21 @@ interface StudentFormProps {
 }
 
 export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) => {
-  const [formData, setFormData] = useState<StudentFormData>({
-    nome: "",
-    numero: "",
-    classe: "",
-    turma: "",
-    curso: "",
-    periodo: ""
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.nome.trim() || !formData.numero.trim()) {
-      return;
-    }
-
-    onSubmit(formData);
-    
-    // Reset form
-    setFormData({
+  const form = useForm<StudentFormData>({
+    resolver: zodResolver(studentFormSchema),
+    defaultValues: {
       nome: "",
       numero: "",
       classe: "",
       turma: "",
       curso: "",
       periodo: ""
-    });
-  };
+    }
+  });
 
-  const handleInputChange = (field: keyof StudentFormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleFormSubmit = (data: StudentFormData) => {
+    onSubmit(data);
+    form.reset();
   };
 
   if (!isOpen) return null;
@@ -66,97 +62,123 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
       </CardHeader>
       
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2 sm:col-span-2 md:col-span-1">
-              <Label htmlFor="nome">Nome Completo *</Label>
-              <Input
-                id="nome"
-                type="text"
-                value={formData.nome}
-                onChange={(e) => handleInputChange("nome", e.target.value)}
-                placeholder="Digite o nome completo"
-                required
-                className="w-full"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="nome"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2 md:col-span-1">
+                    <FormLabel>Nome Completo *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Digite o nome completo" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="numero"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nº de Inscrição *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: 001, 002..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="classe"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Classe</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a classe" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="10ª">10ª Classe</SelectItem>
+                        <SelectItem value="11ª">11ª Classe</SelectItem>
+                        <SelectItem value="12ª">12ª Classe</SelectItem>
+                        <SelectItem value="13ª">13ª Classe</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="turma"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Turma</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a turma" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="A">Turma A</SelectItem>
+                        <SelectItem value="B">Turma B</SelectItem>
+                        <SelectItem value="C">Turma C</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="curso"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Curso</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Ciências Naturais" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="periodo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Período</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ex: Manhã, Tarde" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="numero">Nº de Inscrição *</Label>
-              <Input
-                id="numero"
-                type="text"
-                value={formData.numero}
-                onChange={(e) => handleInputChange("numero", e.target.value)}
-                placeholder="Ex: 001, 002..."
-                required
-                className="w-full"
-              />
+            <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4">
+              <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto">
+                Cancelar
+              </Button>
+              <Button type="submit" className="bg-primary hover:bg-primary-glow w-full sm:w-auto">
+                Salvar Aluno
+              </Button>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="classe">Classe</Label>
-              <Select value={formData.classe} onValueChange={(value) => handleInputChange("classe", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a classe" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10ª">10ª Classe</SelectItem>
-                  <SelectItem value="11ª">11ª Classe</SelectItem>
-                  <SelectItem value="12ª">12ª Classe</SelectItem>
-                  <SelectItem value="13ª">13ª Classe</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="turma">Turma</Label>
-              <Select value={formData.turma} onValueChange={(value) => handleInputChange("turma", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a turma" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="A">Turma A</SelectItem>
-                  <SelectItem value="B">Turma B</SelectItem>
-                  <SelectItem value="C">Turma C</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="curso">Curso</Label>
-              <Input
-                id="curso"
-                type="text"
-                value={formData.curso}
-                onChange={(e) => handleInputChange("curso", e.target.value)}
-                placeholder="Ex: Ciências Naturais"
-                className="w-full"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="periodo">Período</Label>
-              <Input
-                id="periodo"
-                type="text"
-                value={formData.periodo}
-                onChange={(e) => handleInputChange("periodo", e.target.value)}
-                placeholder="Ex: Manhã, Tarde"
-                className="w-full"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4">
-            <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto">
-              Cancelar
-            </Button>
-            <Button type="submit" className="bg-primary hover:bg-primary-glow">
-              Salvar Aluno
-            </Button>
-          </div>
-        </form>
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );
