@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Student, GradeInput } from "@/types/student";
-import { Edit, Trash2, FileText, User } from "lucide-react";
+import { FileText, Trash2, User } from "lucide-react";
 import { GradeEditDialog } from "./GradeEditDialog";
 
 interface StudentCardProps {
@@ -16,8 +16,8 @@ export const StudentCard = ({ student, onUpdateGrade, onDelete }: StudentCardPro
   const [showGradeDialog, setShowGradeDialog] = useState(false);
 
   const calculateAverage = (trimestre: 'trimestre1' | 'trimestre2' | 'trimestre3') => {
-    const notas = student.notas[trimestre];
-    const values = [notas.MAC, notas.PPP, notas.MAT]
+    const values = student.notas
+      .map(disciplina => disciplina[trimestre])
       .filter(nota => nota && !isNaN(parseFloat(nota)))
       .map(nota => parseFloat(nota));
     

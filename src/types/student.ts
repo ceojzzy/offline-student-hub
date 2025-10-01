@@ -1,3 +1,10 @@
+export interface DisciplinaNotas {
+  disciplina: string;
+  trimestre1: string;
+  trimestre2: string;
+  trimestre3: string;
+}
+
 export interface Student {
   id: number;
   nome: string;
@@ -6,11 +13,7 @@ export interface Student {
   turma: string;
   curso: string;
   periodo: string;
-  notas: {
-    trimestre1: { MAC: string; PPP: string; MAT: string };
-    trimestre2: { MAC: string; PPP: string; MAT: string };
-    trimestre3: { MAC: string; PPP: string; MAT: string };
-  };
+  notas: DisciplinaNotas[];
 }
 
 export interface StudentFormData {
@@ -23,8 +26,8 @@ export interface StudentFormData {
 }
 
 export interface GradeInput {
+  disciplina: string;
   trimestre: 'trimestre1' | 'trimestre2' | 'trimestre3';
-  disciplina: 'MAC' | 'PPP' | 'MAT';
   nota: string;
 }
 

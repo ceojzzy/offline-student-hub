@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useStudents } from "@/contexts/StudentsContext";
 import { Student } from "@/types/student";
-import { Calculator, FileText, Search, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { FileText, Search, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 export const GradesPage = () => {
-  const { students, updateGrade } = useStudents();
+  const { students } = useStudents();
   const [selectedClass, setSelectedClass] = useState<string>("all");
   const [selectedTrimester, setSelectedTrimester] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,8 +16,8 @@ export const GradesPage = () => {
   const calculateStudentAverage = (student: Student) => {
     const allGrades: number[] = [];
     
-    Object.values(student.notas).forEach(trimestre => {
-      Object.values(trimestre).forEach(nota => {
+    student.notas.forEach(disciplina => {
+      [disciplina.trimestre1, disciplina.trimestre2, disciplina.trimestre3].forEach(nota => {
         if (nota && !isNaN(parseFloat(nota))) {
           allGrades.push(parseFloat(nota));
         }
@@ -30,7 +29,8 @@ export const GradesPage = () => {
   };
 
   const calculateTrimesterAverage = (student: Student, trimestre: 'trimestre1' | 'trimestre2' | 'trimestre3') => {
-    const grades = Object.values(student.notas[trimestre])
+    const grades = student.notas
+      .map(disciplina => disciplina[trimestre])
       .filter(nota => nota && !isNaN(parseFloat(nota)))
       .map(nota => parseFloat(nota));
     
@@ -172,10 +172,9 @@ export const GradesPage = () => {
                         return null;
                       }
 
-                      const trimesterAverage = calculateTrimesterAverage(student, trimestre as any);
+                      const trimesterAverage = calculateTrimesterAverage(student, trimestre as 'trimestre1' | 'trimestre2' | 'trimestre3');
                       const trimesterStatus = getGradeStatus(trimesterAverage);
                       const TrimesterIcon = trimesterStatus.icon;
-                      const notas = student.notas[trimestre as keyof typeof student.notas];
 
                       return (
                         <Card key={trimestre} className="border border-muted">
@@ -193,11 +192,11 @@ export const GradesPage = () => {
                           
                           <CardContent className="pt-0">
                             <div className="space-y-2">
-                              {Object.entries(notas).map(([disciplina, nota]) => (
-                                <div key={disciplina} className="flex justify-between items-center text-sm">
-                                  <span className="text-muted-foreground">{disciplina}:</span>
+                              {student.notas.map((disciplinaNotas, idx) => (
+                                <div key={idx} className="flex justify-between items-center text-sm">
+                                  <span className="text-muted-foreground">{disciplinaNotas.disciplina}:</span>
                                   <span className="font-medium">
-                                    {nota || "—"}
+                                    {disciplinaNotas[trimestre as 'trimestre1' | 'trimestre2' | 'trimestre3'] || "—"}
                                   </span>
                                 </div>
                               ))}
