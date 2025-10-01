@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { useStudents } from "@/hooks/useStudents";
+import { useStudents } from "@/contexts/StudentsContext";
 import { Student } from "@/types/student";
 import { FileText, Download, Printer, BarChart3, Users, Calculator } from "lucide-react";
 

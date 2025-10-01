@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { useStudents } from "@/hooks/useStudents";
+import { useStudents } from "@/contexts/StudentsContext";
 import { Student } from "@/types/student";
 import { Calculator, FileText, Search, TrendingUp, TrendingDown, Minus } from "lucide-react";
 

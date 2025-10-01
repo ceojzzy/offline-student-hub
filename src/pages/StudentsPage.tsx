@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StudentForm } from "@/components/forms/StudentForm";
 import { ClassGroup } from "@/components/students/ClassGroup";
-import { useStudents } from "@/hooks/useStudents";
+import { useStudents } from "@/contexts/StudentsContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Search, UserPlus } from "lucide-react";

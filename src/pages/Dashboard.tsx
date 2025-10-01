@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatsCards } from "@/components/dashboard/StatsCards";
-import { useStudents } from "@/hooks/useStudents";
+import { useStudents } from "@/contexts/StudentsContext";
 import { Calendar, Clock, BookOpen } from "lucide-react";
 
 const Dashboard = () => {

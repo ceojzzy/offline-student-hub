@@ -1,5 +1,5 @@
 import { StudentForm } from "@/components/forms/StudentForm";
-import { useStudents } from "@/hooks/useStudents";
+import { useStudents } from "@/contexts/StudentsContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";

@@ -10,26 +10,29 @@ import { AddStudentPage } from "./pages/AddStudentPage";
 import { GradesPage } from "./pages/GradesPage";
 import { ReportsPage } from "./pages/ReportsPage";
 import NotFound from "./pages/NotFound";
+import { StudentsProvider } from "./contexts/StudentsContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />}>
-            <Route index element={<Dashboard />} />
-            <Route path="students" element={<StudentsPage />} />
-            <Route path="add-student" element={<AddStudentPage />} />
-            <Route path="grades" element={<GradesPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <StudentsProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />}>
+              <Route index element={<Dashboard />} />
+              <Route path="students" element={<StudentsPage />} />
+              <Route path="add-student" element={<AddStudentPage />} />
+              <Route path="grades" element={<GradesPage />} />
+              <Route path="reports" element={<ReportsPage />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </StudentsProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
