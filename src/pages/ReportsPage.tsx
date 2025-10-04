@@ -29,12 +29,18 @@ export const ReportsPage = () => {
     filteredStudents.forEach(student => {
       let hasGrades = false;
       
-      Object.values(student.notas).forEach(trimestre => {
-        Object.values(trimestre).forEach(nota => {
-          if (nota && !isNaN(parseFloat(nota))) {
-            hasGrades = true;
-            totalGrades++;
-            gradeSum += parseFloat(nota);
+      student.notas.forEach(disciplina => {
+        ['trimestre1', 'trimestre2', 'trimestre3'].forEach(trimestre => {
+          const trimestreNotas = disciplina[trimestre as keyof typeof disciplina];
+          if (typeof trimestreNotas === 'object') {
+            ['mac', 'npp', 'npt'].forEach(tipo => {
+              const nota = trimestreNotas[tipo as keyof typeof trimestreNotas];
+              if (nota && !isNaN(parseFloat(nota))) {
+                hasGrades = true;
+                totalGrades++;
+                gradeSum += parseFloat(nota);
+              }
+            });
           }
         });
       });
@@ -77,10 +83,16 @@ export const ReportsPage = () => {
   const calculateStudentOverallAverage = (student: Student) => {
     const allGrades: number[] = [];
     
-    Object.values(student.notas).forEach(trimestre => {
-      Object.values(trimestre).forEach(nota => {
-        if (nota && !isNaN(parseFloat(nota))) {
-          allGrades.push(parseFloat(nota));
+    student.notas.forEach(disciplina => {
+      ['trimestre1', 'trimestre2', 'trimestre3'].forEach(trimestre => {
+        const trimestreNotas = disciplina[trimestre as keyof typeof disciplina];
+        if (typeof trimestreNotas === 'object') {
+          ['mac', 'npp', 'npt'].forEach(tipo => {
+            const nota = trimestreNotas[tipo as keyof typeof trimestreNotas];
+            if (nota && !isNaN(parseFloat(nota))) {
+              allGrades.push(parseFloat(nota));
+            }
+          });
         }
       });
     });
