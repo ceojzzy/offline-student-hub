@@ -1,8 +1,14 @@
+export interface TrimestreNotas {
+  mac: string; // Média de Avaliação Contínua
+  npp: string; // Nota da Prova Parcial
+  npt: string; // Nota da Prova Trimestral
+}
+
 export interface DisciplinaNotas {
   disciplina: string;
-  trimestre1: string;
-  trimestre2: string;
-  trimestre3: string;
+  trimestre1: TrimestreNotas;
+  trimestre2: TrimestreNotas;
+  trimestre3: TrimestreNotas;
 }
 
 export interface Student {
@@ -28,7 +34,7 @@ export interface StudentFormData {
 export interface GradeInput {
   disciplina: string;
   trimestre: 'trimestre1' | 'trimestre2' | 'trimestre3';
-  nota: string;
+  notas: TrimestreNotas;
 }
 
 export interface TurmaGroup {

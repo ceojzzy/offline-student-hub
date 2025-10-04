@@ -15,11 +15,17 @@ interface StudentCardProps {
 export const StudentCard = ({ student, onUpdateGrade, onDelete }: StudentCardProps) => {
   const [showGradeDialog, setShowGradeDialog] = useState(false);
 
-  const calculateAverage = (trimestre: 'trimestre1' | 'trimestre2' | 'trimestre3') => {
-    const values = student.notas
-      .map(disciplina => disciplina[trimestre])
-      .filter(nota => nota && !isNaN(parseFloat(nota)))
-      .map(nota => parseFloat(nota));
+  const calculateMT = (trimestre: 'trimestre1' | 'trimestre2' | 'trimestre3') => {
+    const values = student.notas.map(disciplina => {
+      const notas = disciplina[trimestre];
+      const mac = parseFloat(notas.mac) || 0;
+      const npp = parseFloat(notas.npp) || 0;
+      const npt = parseFloat(notas.npt) || 0;
+      
+      if (!notas.mac && !notas.npp && !notas.npt) return null;
+      
+      return (mac + npp + npt) / 3;
+    }).filter(mt => mt !== null) as number[];
     
     if (values.length === 0) return "";
     
@@ -86,7 +92,7 @@ export const StudentCard = ({ student, onUpdateGrade, onDelete }: StudentCardPro
               <span className="text-sm font-medium text-muted-foreground">Médias:</span>
               <div className="flex space-x-2">
                 {(['trimestre1', 'trimestre2', 'trimestre3'] as const).map((trimestre, index) => {
-                  const average = calculateAverage(trimestre);
+                  const average = calculateMT(trimestre);
                   const status = getGradeStatus(average);
                   
                   return (
@@ -95,7 +101,7 @@ export const StudentCard = ({ student, onUpdateGrade, onDelete }: StudentCardPro
                       variant={status === "success" ? "default" : status === "warning" ? "secondary" : "outline"}
                       className="text-xs"
                     >
-                      {index + 1}º: {average || "—"}
+                      MT{index + 1}: {average || "—"}
                     </Badge>
                   );
                 })}

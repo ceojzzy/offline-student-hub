@@ -3,49 +3,34 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useStudents } from "@/contexts/StudentsContext";
-import { Student } from "@/types/student";
-import { FileText, Search, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { DisciplinaNotas } from "@/types/student";
+import { FileText, Search } from "lucide-react";
 
 export const GradesPage = () => {
   const { students } = useStudents();
   const [selectedClass, setSelectedClass] = useState<string>("all");
-  const [selectedTrimester, setSelectedTrimester] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const calculateStudentAverage = (student: Student) => {
-    const allGrades: number[] = [];
+  const calculateMT = (notas: DisciplinaNotas[], trimestre: 'trimestre1' | 'trimestre2' | 'trimestre3') => {
+    const values = notas.map(disciplina => {
+      const trimestreNotas = disciplina[trimestre];
+      const mac = parseFloat(trimestreNotas.mac) || 0;
+      const npp = parseFloat(trimestreNotas.npp) || 0;
+      const npt = parseFloat(trimestreNotas.npt) || 0;
+      
+      if (!trimestreNotas.mac && !trimestreNotas.npp && !trimestreNotas.npt) return null;
+      
+      return (mac + npp + npt) / 3;
+    }).filter(mt => mt !== null) as number[];
     
-    student.notas.forEach(disciplina => {
-      [disciplina.trimestre1, disciplina.trimestre2, disciplina.trimestre3].forEach(nota => {
-        if (nota && !isNaN(parseFloat(nota))) {
-          allGrades.push(parseFloat(nota));
-        }
-      });
-    });
-
-    if (allGrades.length === 0) return null;
-    return allGrades.reduce((sum, grade) => sum + grade, 0) / allGrades.length;
-  };
-
-  const calculateTrimesterAverage = (student: Student, trimestre: 'trimestre1' | 'trimestre2' | 'trimestre3') => {
-    const grades = student.notas
-      .map(disciplina => disciplina[trimestre])
-      .filter(nota => nota && !isNaN(parseFloat(nota)))
-      .map(nota => parseFloat(nota));
+    if (values.length === 0) return 0;
     
-    if (grades.length === 0) return null;
-    return grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
+    const sum = values.reduce((acc, val) => acc + val, 0);
+    return sum / values.length;
   };
 
-  const getGradeStatus = (average: number | null) => {
-    if (average === null) return { color: "secondary", icon: Minus, text: "Sem notas" };
-    if (average >= 14) return { color: "success", icon: TrendingUp, text: "Excelente" };
-    if (average >= 10) return { color: "warning", icon: TrendingUp, text: "Aprovado" };
-    return { color: "destructive", icon: TrendingDown, text: "Reprovado" };
-  };
-
-  // Filtrar estudantes
   const filteredStudents = students.filter(student => {
     const matchesClass = selectedClass === "all" || student.classe === selectedClass;
     const matchesSearch = student.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -53,25 +38,17 @@ export const GradesPage = () => {
     return matchesClass && matchesSearch;
   });
 
-  // Obter classes únicas
   const uniqueClasses = [...new Set(students.map(s => s.classe))].sort();
-
-  const trimesterLabels = {
-    trimestre1: "1º Trimestre",
-    trimestre2: "2º Trimestre", 
-    trimestre3: "3º Trimestre"
-  };
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-foreground mb-2">Notas e Avaliações</h1>
         <p className="text-muted-foreground">
-          Acompanhe o desempenho dos alunos por trimestre
+          Mini-Pauta de Avaliação - Acompanhe o desempenho dos alunos
         </p>
       </div>
 
-      {/* Filtros */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
@@ -80,7 +57,7 @@ export const GradesPage = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Classe</label>
               <Select value={selectedClass} onValueChange={setSelectedClass}>
@@ -90,23 +67,8 @@ export const GradesPage = () => {
                 <SelectContent>
                   <SelectItem value="all">Todas as classes</SelectItem>
                   {uniqueClasses.map(classe => (
-                    <SelectItem key={classe} value={classe}>{classe} Classe</SelectItem>
+                    <SelectItem key={classe} value={classe}>{classe}</SelectItem>
                   ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Trimestre</label>
-              <Select value={selectedTrimester} onValueChange={setSelectedTrimester}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Todos os trimestres" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os trimestres</SelectItem>
-                  <SelectItem value="trimestre1">1º Trimestre</SelectItem>
-                  <SelectItem value="trimestre2">2º Trimestre</SelectItem>
-                  <SelectItem value="trimestre3">3º Trimestre</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -123,11 +85,13 @@ export const GradesPage = () => {
         </CardContent>
       </Card>
 
-      {/* Lista de Alunos com Notas */}
-      <div className="space-y-4">
-        {filteredStudents.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center">
+      <Card>
+        <CardHeader>
+          <CardTitle>Lista de Alunos e Médias</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {filteredStudents.length === 0 ? (
+            <div className="py-12 text-center">
               <FileText className="w-16 h-16 mx-auto mb-4 text-muted-foreground opacity-50" />
               <h3 className="text-lg font-semibold text-foreground mb-2">
                 Nenhum aluno encontrado
@@ -135,83 +99,63 @@ export const GradesPage = () => {
               <p className="text-muted-foreground">
                 Ajuste os filtros ou cadastre novos alunos
               </p>
-            </CardContent>
-          </Card>
-        ) : (
-          filteredStudents.map(student => {
-            const overallAverage = calculateStudentAverage(student);
-            const overallStatus = getGradeStatus(overallAverage);
-            const OverallIcon = overallStatus.icon;
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-16">Nº</TableHead>
+                    <TableHead>Nome</TableHead>
+                    <TableHead className="text-center">Classe/Turma</TableHead>
+                    <TableHead className="text-center">MT1</TableHead>
+                    <TableHead className="text-center">MT2</TableHead>
+                    <TableHead className="text-center">MT3</TableHead>
+                    <TableHead className="text-center">MFD</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredStudents.map(student => {
+                    const mt1 = calculateMT(student.notas, 'trimestre1');
+                    const mt2 = calculateMT(student.notas, 'trimestre2');
+                    const mt3 = calculateMT(student.notas, 'trimestre3');
+                    
+                    const mts = [mt1, mt2, mt3].filter(mt => mt > 0);
+                    const mfd = mts.length > 0 
+                      ? mts.reduce((acc, val) => acc + val, 0) / mts.length 
+                      : 0;
+                    
+                    const getStatus = (avg: number) => 
+                      avg >= 14 ? 'default' : avg >= 10 ? 'secondary' : 'destructive';
 
-            return (
-              <Card key={student.id} className="border border-border">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{student.nome}</CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        {student.classe} / Turma {student.turma} • Nº {student.numero}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="flex items-center space-x-2">
-                        <OverallIcon className="w-4 h-4" />
-                        <Badge variant={overallStatus.color === "success" ? "default" : "secondary"}>
-                          Média: {overallAverage ? overallAverage.toFixed(1) : "—"}
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">{overallStatus.text}</p>
-                    </div>
-                  </div>
-                </CardHeader>
-
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {Object.entries(trimesterLabels).map(([trimestre, label]) => {
-                      if (selectedTrimester !== "all" && selectedTrimester !== trimestre) {
-                        return null;
-                      }
-
-                      const trimesterAverage = calculateTrimesterAverage(student, trimestre as 'trimestre1' | 'trimestre2' | 'trimestre3');
-                      const trimesterStatus = getGradeStatus(trimesterAverage);
-                      const TrimesterIcon = trimesterStatus.icon;
-
-                      return (
-                        <Card key={trimestre} className="border border-muted">
-                          <CardHeader className="pb-3">
-                            <div className="flex items-center justify-between">
-                              <CardTitle className="text-sm">{label}</CardTitle>
-                              <div className="flex items-center space-x-1">
-                                <TrimesterIcon className="w-3 h-3" />
-                                <span className="text-xs font-medium">
-                                  {trimesterAverage ? trimesterAverage.toFixed(1) : "—"}
-                                </span>
-                              </div>
-                            </div>
-                          </CardHeader>
-                          
-                          <CardContent className="pt-0">
-                            <div className="space-y-2">
-                              {student.notas.map((disciplinaNotas, idx) => (
-                                <div key={idx} className="flex justify-between items-center text-sm">
-                                  <span className="text-muted-foreground">{disciplinaNotas.disciplina}:</span>
-                                  <span className="font-medium">
-                                    {disciplinaNotas[trimestre as 'trimestre1' | 'trimestre2' | 'trimestre3'] || "—"}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
-        )}
-      </div>
+                    return (
+                      <TableRow key={student.id}>
+                        <TableCell className="font-medium">{student.numero}</TableCell>
+                        <TableCell className="font-medium">{student.nome}</TableCell>
+                        <TableCell className="text-center">
+                          {student.classe} / {student.turma}
+                        </TableCell>
+                        {[mt1, mt2, mt3].map((mt, idx) => (
+                          <TableCell key={idx} className="text-center">
+                            <Badge variant={getStatus(mt)}>
+                              {mt > 0 ? mt.toFixed(1) : "—"}
+                            </Badge>
+                          </TableCell>
+                        ))}
+                        <TableCell className="text-center">
+                          <Badge variant={getStatus(mfd)} className="font-bold">
+                            {mfd > 0 ? mfd.toFixed(1) : "—"}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
