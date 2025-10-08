@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useStudents } from "@/contexts/StudentsContext";
 import { Student } from "@/types/student";
 import { FileText, Download, Printer, BarChart3, Users, Calculator } from "lucide-react";
+import angolaEmblem from "@/assets/angola-emblem.png";
 
 export const ReportsPage = () => {
   const { students, getStudentsByClass } = useStudents();
@@ -196,9 +197,13 @@ export const ReportsPage = () => {
           <title>Relatório de Notas - ${classInfo}</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 20px; font-size: 10px; }
-            .header { text-align: center; margin-bottom: 20px; }
-            .school-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
-            .report-title { font-size: 14px; margin-bottom: 3px; }
+            .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 15px; }
+            .header-top { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 10px; }
+            .emblem { width: 60px; height: 60px; }
+            .header-text { text-align: center; }
+            .country-name { font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
+            .school-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+            .report-title { font-size: 14px; margin-bottom: 3px; font-weight: bold; }
             .report-date { font-size: 10px; color: #666; }
             table { width: 100%; border-collapse: collapse; margin-top: 15px; }
             th, td { border: 1px solid #333; padding: 4px 6px; text-align: center; font-size: 9px; }
@@ -206,6 +211,9 @@ export const ReportsPage = () => {
             .student-info { text-align: left; }
             .discipline-header { background-color: #f0f0f0; }
             .sub-header { font-size: 8px; background-color: #f5f5f5; }
+            .obs-cell { font-weight: bold; }
+            .aprovado { color: #16a34a; }
+            .reprovado { color: #dc2626; }
             @media print {
               @page { size: landscape; margin: 15mm; }
             }
@@ -213,7 +221,13 @@ export const ReportsPage = () => {
         </head>
         <body>
           <div class="header">
-            <div class="school-name">Escola Nova Geração</div>
+            <div class="header-top">
+              <img src="${angolaEmblem}" alt="Insígnia de Angola" class="emblem" />
+              <div class="header-text">
+                <div class="country-name">República de Angola</div>
+                <div class="school-name">Escola Nova Geração</div>
+              </div>
+            </div>
             <div class="report-title">Mini-Pauta - ${classInfo}</div>
             <div class="report-date">Gerado em: ${new Date().toLocaleDateString('pt-BR')}</div>
           </div>
@@ -229,6 +243,7 @@ export const ReportsPage = () => {
                   <th colspan="4" class="discipline-header">${disc}</th>
                 `).join('')}
                 <th rowspan="2">Média Geral</th>
+                <th rowspan="2">OBS</th>
               </tr>
               <tr class="sub-header">
                 ${disciplinesList.map(() => `
@@ -264,6 +279,7 @@ export const ReportsPage = () => {
                     }
                   }).join('')}
                   <td><strong>${student.media > 0 ? student.media.toFixed(1) : '-'}</strong></td>
+                  <td class="obs-cell ${student.status === 'Aprovado' ? 'aprovado' : student.status === 'Reprovado' ? 'reprovado' : ''}">${student.status}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -439,6 +455,7 @@ export const ReportsPage = () => {
                             </th>
                           ))}
                           <th rowSpan={2} className="p-2 border border-border text-center font-bold">Média Geral</th>
+                          <th rowSpan={2} className="p-2 border border-border text-center font-bold">OBS</th>
                         </tr>
                         {/* Sub-header row for trimesters */}
                         <tr className="bg-muted/30 text-[10px]">
@@ -498,6 +515,18 @@ export const ReportsPage = () => {
                             })}
                             <td className="p-2 border border-border text-center font-bold text-base">
                               {student.media > 0 ? student.media.toFixed(1) : '-'}
+                            </td>
+                            <td className="p-2 border border-border text-center font-bold">
+                              <Badge 
+                                variant={
+                                  student.status === "Aprovado" ? "default" : 
+                                  student.status === "Reprovado" ? "destructive" : 
+                                  "secondary"
+                                }
+                                className="text-xs"
+                              >
+                                {student.status}
+                              </Badge>
                             </td>
                           </tr>
                         ))}
