@@ -58,6 +58,31 @@ export const ReportsPage = () => {
     };
   };
 
+  const calculateMT = (trimestre: any) => {
+    const mac = parseFloat(trimestre.mac) || 0;
+    const npp = parseFloat(trimestre.npp) || 0;
+    const npt = parseFloat(trimestre.npt) || 0;
+    
+    if (mac === 0 && npp === 0 && npt === 0) return 0;
+    return (mac + npp + npt) / 3;
+  };
+
+  const calculateMFD = (disciplina: any) => {
+    const mt1 = calculateMT(disciplina.trimestre1);
+    const mt2 = calculateMT(disciplina.trimestre2);
+    const mt3 = calculateMT(disciplina.trimestre3);
+    
+    if (mt1 === 0 && mt2 === 0 && mt3 === 0) return 0;
+    
+    let sum = 0;
+    let count = 0;
+    if (mt1 > 0) { sum += mt1; count++; }
+    if (mt2 > 0) { sum += mt2; count++; }
+    if (mt3 > 0) { sum += mt3; count++; }
+    
+    return count > 0 ? sum / count : 0;
+  };
+
   const generateGradeReport = () => {
     const filteredStudents = selectedClass === "all" 
       ? students 
@@ -72,7 +97,9 @@ export const ReportsPage = () => {
         classe: student.classe,
         turma: student.turma,
         curso: student.curso,
+        periodo: student.periodo,
         media: studentAverage,
+        notas: student.notas,
         status: studentAverage >= 10 ? "Aprovado" : studentAverage > 0 ? "Reprovado" : "Sem notas"
       };
     }).sort((a, b) => b.media - a.media);
@@ -104,10 +131,38 @@ export const ReportsPage = () => {
   const exportToCSV = () => {
     const reportData = generateGradeReport();
     
-    const headers = "Nome,Número,Classe,Turma,Curso,Média,Status\n";
-    const csvContent = reportData.map(row => 
-      `"${row.nome}","${row.numero}","${row.classe}","${row.turma}","${row.curso}","${row.media.toFixed(1)}","${row.status}"`
-    ).join("\n");
+    let headers = "Nome,Número,Classe,Turma,Curso,Período";
+    
+    // Add discipline headers
+    const allDisciplines = new Set<string>();
+    reportData.forEach(student => {
+      student.notas.forEach(disc => allDisciplines.add(disc.disciplina));
+    });
+    
+    allDisciplines.forEach(disc => {
+      headers += `,${disc} - 1ºT,${disc} - 2ºT,${disc} - 3ºT,${disc} - MFD`;
+    });
+    headers += ",Média Geral,Status\n";
+    
+    const csvContent = reportData.map(student => {
+      let row = `"${student.nome}","${student.numero}","${student.classe}","${student.turma}","${student.curso}","${student.periodo}"`;
+      
+      allDisciplines.forEach(discName => {
+        const disc = student.notas.find(d => d.disciplina === discName);
+        if (disc) {
+          const mt1 = calculateMT(disc.trimestre1);
+          const mt2 = calculateMT(disc.trimestre2);
+          const mt3 = calculateMT(disc.trimestre3);
+          const mfd = calculateMFD(disc);
+          row += `,"${mt1.toFixed(1)}","${mt2.toFixed(1)}","${mt3.toFixed(1)}","${mfd.toFixed(1)}"`;
+        } else {
+          row += `,"","","",""`;
+        }
+      });
+      
+      row += `,"${student.media.toFixed(1)}","${student.status}"`;
+      return row;
+    }).join("\n");
     
     const csv = headers + csvContent;
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -128,53 +183,87 @@ export const ReportsPage = () => {
     const reportData = generateGradeReport();
     const classInfo = selectedClass === "all" ? "Todas as Classes" : `${selectedClass} Classe`;
     
+    // Get all unique disciplines
+    const allDisciplines = new Set<string>();
+    reportData.forEach(student => {
+      student.notas.forEach(disc => allDisciplines.add(disc.disciplina));
+    });
+    const disciplinesList = Array.from(allDisciplines);
+    
     const printContent = `
       <html>
         <head>
           <title>Relatório de Notas - ${classInfo}</title>
           <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            .header { text-align: center; margin-bottom: 30px; }
-            .school-name { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
-            .report-title { font-size: 18px; margin-bottom: 5px; }
-            .report-date { font-size: 14px; color: #666; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f5f5f5; font-weight: bold; }
-            .status-aprovado { color: green; font-weight: bold; }
-            .status-reprovado { color: red; font-weight: bold; }
-            .status-sem-notas { color: #666; }
+            body { font-family: Arial, sans-serif; margin: 20px; font-size: 10px; }
+            .header { text-align: center; margin-bottom: 20px; }
+            .school-name { font-size: 18px; font-weight: bold; margin-bottom: 5px; }
+            .report-title { font-size: 14px; margin-bottom: 3px; }
+            .report-date { font-size: 10px; color: #666; }
+            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+            th, td { border: 1px solid #333; padding: 4px 6px; text-align: center; font-size: 9px; }
+            th { background-color: #e0e0e0; font-weight: bold; }
+            .student-info { text-align: left; }
+            .discipline-header { background-color: #f0f0f0; }
+            .sub-header { font-size: 8px; background-color: #f5f5f5; }
+            @media print {
+              @page { size: landscape; margin: 15mm; }
+            }
           </style>
         </head>
         <body>
           <div class="header">
             <div class="school-name">Escola Nova Geração</div>
-            <div class="report-title">Relatório de Notas - ${classInfo}</div>
+            <div class="report-title">Mini-Pauta - ${classInfo}</div>
             <div class="report-date">Gerado em: ${new Date().toLocaleDateString('pt-BR')}</div>
           </div>
           
           <table>
             <thead>
               <tr>
-                <th>Nº</th>
-                <th>Nome</th>
-                <th>Classe</th>
-                <th>Turma</th>
-                <th>Curso</th>
-                <th>Média</th>
-                <th>Status</th>
+                <th rowspan="2">Nº</th>
+                <th rowspan="2" class="student-info">Nome</th>
+                <th rowspan="2">Classe</th>
+                <th rowspan="2">Turma</th>
+                ${disciplinesList.map(disc => `
+                  <th colspan="4" class="discipline-header">${disc}</th>
+                `).join('')}
+                <th rowspan="2">Média Geral</th>
+              </tr>
+              <tr class="sub-header">
+                ${disciplinesList.map(() => `
+                  <th>1ºT</th>
+                  <th>2ºT</th>
+                  <th>3ºT</th>
+                  <th>MFD</th>
+                `).join('')}
               </tr>
             </thead>
             <tbody>
               ${reportData.map(student => `
                 <tr>
                   <td>${student.numero}</td>
-                  <td>${student.nome}</td>
+                  <td class="student-info">${student.nome}</td>
                   <td>${student.classe}</td>
                   <td>${student.turma}</td>
-                  <td>${student.curso}</td>
-                  <td>${student.media.toFixed(1)}</td>
-                  <td class="status-${student.status.toLowerCase().replace(' ', '-')}">${student.status}</td>
+                  ${disciplinesList.map(discName => {
+                    const disc = student.notas.find(d => d.disciplina === discName);
+                    if (disc) {
+                      const mt1 = calculateMT(disc.trimestre1);
+                      const mt2 = calculateMT(disc.trimestre2);
+                      const mt3 = calculateMT(disc.trimestre3);
+                      const mfd = calculateMFD(disc);
+                      return `
+                        <td>${mt1 > 0 ? mt1.toFixed(1) : '-'}</td>
+                        <td>${mt2 > 0 ? mt2.toFixed(1) : '-'}</td>
+                        <td>${mt3 > 0 ? mt3.toFixed(1) : '-'}</td>
+                        <td><strong>${mfd > 0 ? mfd.toFixed(1) : '-'}</strong></td>
+                      `;
+                    } else {
+                      return '<td>-</td><td>-</td><td>-</td><td>-</td>';
+                    }
+                  }).join('')}
+                  <td><strong>${student.media > 0 ? student.media.toFixed(1) : '-'}</strong></td>
                 </tr>
               `).join('')}
             </tbody>
@@ -325,44 +414,103 @@ export const ReportsPage = () => {
             </div>
           ) : (
             <>
-              {/* Desktop Table */}
+              {/* Desktop Table - Detailed Grade Report */}
               <div className="hidden lg:block overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left p-3 font-medium text-muted-foreground">Nº</th>
-                      <th className="text-left p-3 font-medium text-muted-foreground">Nome</th>
-                      <th className="text-left p-3 font-medium text-muted-foreground">Classe</th>
-                      <th className="text-left p-3 font-medium text-muted-foreground">Turma</th>
-                      <th className="text-left p-3 font-medium text-muted-foreground">Curso</th>
-                      <th className="text-left p-3 font-medium text-muted-foreground">Média</th>
-                      <th className="text-left p-3 font-medium text-muted-foreground">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {reportData.map((student, index) => (
-                      <tr key={index} className="border-b border-border hover:bg-muted/30">
-                        <td className="p-3">{student.numero}</td>
-                        <td className="p-3 font-medium">{student.nome}</td>
-                        <td className="p-3">{student.classe}</td>
-                        <td className="p-3">{student.turma}</td>
-                        <td className="p-3">{student.curso}</td>
-                        <td className="p-3 font-mono">{student.media.toFixed(1)}</td>
-                        <td className="p-3">
-                          <Badge 
-                            variant={
-                              student.status === "Aprovado" ? "default" : 
-                              student.status === "Reprovado" ? "destructive" : 
-                              "secondary"
-                            }
-                          >
-                            {student.status}
-                          </Badge>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="space-y-8">
+                  {reportData.map((student, index) => (
+                    <div key={index} className="border border-border rounded-lg overflow-hidden">
+                      {/* Student Header */}
+                      <div className="bg-muted/50 p-4 border-b border-border">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <h3 className="font-bold text-lg">{student.nome}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              Nº {student.numero} | {student.classe} Classe | Turma {student.turma} | {student.curso} | {student.periodo}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm text-muted-foreground">Média Geral</p>
+                            <p className="text-2xl font-bold">{student.media.toFixed(1)}</p>
+                            <Badge 
+                              variant={
+                                student.status === "Aprovado" ? "default" : 
+                                student.status === "Reprovado" ? "destructive" : 
+                                "secondary"
+                              }
+                            >
+                              {student.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Grades Table */}
+                      {student.notas.length > 0 ? (
+                        <table className="w-full">
+                          <thead>
+                            <tr className="bg-muted/30">
+                              <th className="text-left p-3 font-medium border-r border-border">Disciplina</th>
+                              <th colSpan={3} className="text-center p-3 font-medium border-r border-border">1º Trimestre</th>
+                              <th colSpan={3} className="text-center p-3 font-medium border-r border-border">2º Trimestre</th>
+                              <th colSpan={3} className="text-center p-3 font-medium border-r border-border">3º Trimestre</th>
+                              <th className="text-center p-3 font-medium">MFD</th>
+                            </tr>
+                            <tr className="bg-muted/20 text-xs">
+                              <th className="p-2 border-r border-border"></th>
+                              <th className="p-2 text-center">MAC</th>
+                              <th className="p-2 text-center">NPP</th>
+                              <th className="p-2 text-center border-r border-border">NPT</th>
+                              <th className="p-2 text-center">MAC</th>
+                              <th className="p-2 text-center">NPP</th>
+                              <th className="p-2 text-center border-r border-border">NPT</th>
+                              <th className="p-2 text-center">MAC</th>
+                              <th className="p-2 text-center">NPP</th>
+                              <th className="p-2 text-center border-r border-border">NPT</th>
+                              <th className="p-2 text-center"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {student.notas.map((disciplina, idx) => {
+                              const mt1 = calculateMT(disciplina.trimestre1);
+                              const mt2 = calculateMT(disciplina.trimestre2);
+                              const mt3 = calculateMT(disciplina.trimestre3);
+                              const mfd = calculateMFD(disciplina);
+                              
+                              return (
+                                <tr key={idx} className="border-b border-border hover:bg-muted/10">
+                                  <td className="p-3 font-medium border-r border-border">{disciplina.disciplina}</td>
+                                  <td className="p-3 text-center text-sm">{disciplina.trimestre1.mac || '-'}</td>
+                                  <td className="p-3 text-center text-sm">{disciplina.trimestre1.npp || '-'}</td>
+                                  <td className="p-3 text-center text-sm border-r border-border">
+                                    {disciplina.trimestre1.npt || '-'}
+                                    {mt1 > 0 && <div className="text-xs font-bold text-primary mt-1">MT: {mt1.toFixed(1)}</div>}
+                                  </td>
+                                  <td className="p-3 text-center text-sm">{disciplina.trimestre2.mac || '-'}</td>
+                                  <td className="p-3 text-center text-sm">{disciplina.trimestre2.npp || '-'}</td>
+                                  <td className="p-3 text-center text-sm border-r border-border">
+                                    {disciplina.trimestre2.npt || '-'}
+                                    {mt2 > 0 && <div className="text-xs font-bold text-primary mt-1">MT: {mt2.toFixed(1)}</div>}
+                                  </td>
+                                  <td className="p-3 text-center text-sm">{disciplina.trimestre3.mac || '-'}</td>
+                                  <td className="p-3 text-center text-sm">{disciplina.trimestre3.npp || '-'}</td>
+                                  <td className="p-3 text-center text-sm border-r border-border">
+                                    {disciplina.trimestre3.npt || '-'}
+                                    {mt3 > 0 && <div className="text-xs font-bold text-primary mt-1">MT: {mt3.toFixed(1)}</div>}
+                                  </td>
+                                  <td className="p-3 text-center font-bold text-lg">{mfd > 0 ? mfd.toFixed(1) : '-'}</td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      ) : (
+                        <div className="p-6 text-center text-muted-foreground">
+                          Nenhuma disciplina cadastrada
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Mobile Cards */}
@@ -372,7 +520,9 @@ export const ReportsPage = () => {
                     <div className="flex justify-between items-start mb-3">
                       <div>
                         <h4 className="font-semibold text-foreground">{student.nome}</h4>
-                        <p className="text-sm text-muted-foreground">Nº {student.numero}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Nº {student.numero} | {student.classe} Classe
+                        </p>
                       </div>
                       <Badge 
                         variant={
@@ -384,24 +534,62 @@ export const ReportsPage = () => {
                         {student.status}
                       </Badge>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Classe:</span>
-                        <span className="ml-1 font-medium">{student.classe}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Turma:</span>
-                        <span className="ml-1 font-medium">{student.turma}</span>
-                      </div>
-                      <div className="col-span-2">
-                        <span className="text-muted-foreground">Curso:</span>
-                        <span className="ml-1 font-medium">{student.curso}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Média:</span>
-                        <span className="ml-1 font-mono font-bold">{student.media.toFixed(1)}</span>
+                    
+                    <div className="mb-3 pb-3 border-b border-border">
+                      <div className="text-sm">
+                        <span className="text-muted-foreground">Média Geral:</span>
+                        <span className="ml-2 text-xl font-bold">{student.media.toFixed(1)}</span>
                       </div>
                     </div>
+
+                    {student.notas.length > 0 ? (
+                      <div className="space-y-3">
+                        {student.notas.map((disciplina, idx) => {
+                          const mt1 = calculateMT(disciplina.trimestre1);
+                          const mt2 = calculateMT(disciplina.trimestre2);
+                          const mt3 = calculateMT(disciplina.trimestre3);
+                          const mfd = calculateMFD(disciplina);
+                          
+                          return (
+                            <div key={idx} className="border border-border rounded-lg p-3">
+                              <h5 className="font-semibold mb-2">{disciplina.disciplina}</h5>
+                              <div className="grid grid-cols-3 gap-2 text-xs">
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">1º Trim.</p>
+                                  <p>MAC: {disciplina.trimestre1.mac || '-'}</p>
+                                  <p>NPP: {disciplina.trimestre1.npp || '-'}</p>
+                                  <p>NPT: {disciplina.trimestre1.npt || '-'}</p>
+                                  {mt1 > 0 && <p className="font-bold text-primary mt-1">MT: {mt1.toFixed(1)}</p>}
+                                </div>
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">2º Trim.</p>
+                                  <p>MAC: {disciplina.trimestre2.mac || '-'}</p>
+                                  <p>NPP: {disciplina.trimestre2.npp || '-'}</p>
+                                  <p>NPT: {disciplina.trimestre2.npt || '-'}</p>
+                                  {mt2 > 0 && <p className="font-bold text-primary mt-1">MT: {mt2.toFixed(1)}</p>}
+                                </div>
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">3º Trim.</p>
+                                  <p>MAC: {disciplina.trimestre3.mac || '-'}</p>
+                                  <p>NPP: {disciplina.trimestre3.npp || '-'}</p>
+                                  <p>NPT: {disciplina.trimestre3.npt || '-'}</p>
+                                  {mt3 > 0 && <p className="font-bold text-primary mt-1">MT: {mt3.toFixed(1)}</p>}
+                                </div>
+                              </div>
+                              {mfd > 0 && (
+                                <div className="mt-2 pt-2 border-t border-border">
+                                  <span className="text-sm font-bold">MFD: {mfd.toFixed(1)}</span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground text-center py-4">
+                        Nenhuma disciplina cadastrada
+                      </p>
+                    )}
                   </Card>
                 ))}
               </div>
