@@ -10,16 +10,43 @@ import angolaEmblem from "@/assets/angola-emblem.png";
 
 export const ReportsPage = () => {
   const { students, getStudentsByClass } = useStudents();
-  const [selectedClass, setSelectedClass] = useState<string>("all");
-  const [selectedTrimester, setSelectedTrimester] = useState<string>("all");
+  const [reportType, setReportType] = useState<"student" | "class-turma" | "class-all">("class-turma");
+  const [selectedStudent, setSelectedStudent] = useState<string>("");
+  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [selectedTurma, setSelectedTurma] = useState<string>("");
+  const [selectedCurso, setSelectedCurso] = useState<string>("");
 
-  // Obter classes únicas
+  // Obter valores únicos
   const uniqueClasses = [...new Set(students.map(s => s.classe))].sort();
+  const uniqueTurmas = [...new Set(students.map(s => s.turma))].sort();
+  const uniqueCursos = [...new Set(students.map(s => s.curso))].sort();
+
+  const getFilteredStudents = () => {
+    let filtered = students;
+
+    if (reportType === "student") {
+      // Relatório individual do aluno
+      if (selectedStudent) {
+        filtered = students.filter(s => s.id.toString() === selectedStudent);
+      } else {
+        filtered = [];
+      }
+    } else if (reportType === "class-turma") {
+      // Relatório por classe, turma e curso
+      if (selectedClass) filtered = filtered.filter(s => s.classe === selectedClass);
+      if (selectedTurma) filtered = filtered.filter(s => s.turma === selectedTurma);
+      if (selectedCurso) filtered = filtered.filter(s => s.curso === selectedCurso);
+    } else if (reportType === "class-all") {
+      // Relatório por classe e curso (todas as turmas)
+      if (selectedClass) filtered = filtered.filter(s => s.classe === selectedClass);
+      if (selectedCurso) filtered = filtered.filter(s => s.curso === selectedCurso);
+    }
+
+    return filtered;
+  };
 
   const calculateClassStats = () => {
-    const filteredStudents = selectedClass === "all" 
-      ? students 
-      : students.filter(s => s.classe === selectedClass);
+    const filteredStudents = getFilteredStudents();
 
     const total = filteredStudents.length;
     
@@ -85,9 +112,7 @@ export const ReportsPage = () => {
   };
 
   const generateGradeReport = () => {
-    const filteredStudents = selectedClass === "all" 
-      ? students 
-      : students.filter(s => s.classe === selectedClass);
+    const filteredStudents = getFilteredStudents();
 
     const reportData = filteredStudents.map(student => {
       const studentAverage = calculateStudentOverallAverage(student);
@@ -182,7 +207,16 @@ export const ReportsPage = () => {
 
   const printReport = () => {
     const reportData = generateGradeReport();
-    const classInfo = selectedClass === "all" ? "Todas as Classes" : `${selectedClass} Classe`;
+    
+    let reportTitle = "";
+    if (reportType === "student") {
+      const student = students.find(s => s.id.toString() === selectedStudent);
+      reportTitle = student ? `Relatório Individual - ${student.nome}` : "Relatório Individual";
+    } else if (reportType === "class-turma") {
+      reportTitle = `${selectedClass}ª Classe, Turma ${selectedTurma} - ${selectedCurso}`;
+    } else if (reportType === "class-all") {
+      reportTitle = `${selectedClass}ª Classe, Todas as Turmas - ${selectedCurso}`;
+    }
     
     // Get all unique disciplines
     const allDisciplines = new Set<string>();
@@ -194,7 +228,7 @@ export const ReportsPage = () => {
     const printContent = `
       <html>
         <head>
-          <title>Relatório de Notas - ${classInfo}</title>
+          <title>Relatório de Notas - ${reportTitle}</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 20px; font-size: 10px; }
             .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 15px; }
@@ -228,7 +262,7 @@ export const ReportsPage = () => {
                 <div class="school-name">Escola Nova Geração</div>
               </div>
             </div>
-            <div class="report-title">Mini-Pauta - ${classInfo}</div>
+            <div class="report-title">Mini-Pauta - ${reportTitle}</div>
             <div class="report-date">Gerado em: ${new Date().toLocaleDateString('pt-BR')}</div>
           </div>
           
@@ -317,34 +351,137 @@ export const ReportsPage = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-4">
+            {/* Tipo de Relatório */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Classe</label>
-              <Select value={selectedClass} onValueChange={setSelectedClass}>
+              <label className="text-sm font-medium">Tipo de Relatório</label>
+              <Select value={reportType} onValueChange={(value: any) => {
+                setReportType(value);
+                setSelectedStudent("");
+                setSelectedClass("");
+                setSelectedTurma("");
+                setSelectedCurso("");
+              }}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Todas as classes" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todas as classes</SelectItem>
-                  {uniqueClasses.map(classe => (
-                    <SelectItem key={classe} value={classe}>{classe} Classe</SelectItem>
-                  ))}
+                  <SelectItem value="student">Por Aluno (Relatório Individual)</SelectItem>
+                  <SelectItem value="class-turma">Por Classe, Turma e Curso</SelectItem>
+                  <SelectItem value="class-all">Por Classe e Curso (Todas as Turmas)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Ações</label>
-              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                <Button onClick={exportToCSV} variant="outline" size="sm" className="w-full sm:w-auto">
-                  <Download className="w-4 h-4 mr-2" />
-                  Exportar CSV
-                </Button>
-                <Button onClick={printReport} variant="outline" size="sm" className="w-full sm:w-auto">
-                  <Printer className="w-4 h-4 mr-2" />
-                  Imprimir
-                </Button>
-              </div>
+            {/* Filtros Dinâmicos */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {reportType === "student" && (
+                <div className="space-y-2 lg:col-span-2">
+                  <label className="text-sm font-medium">Aluno</label>
+                  <Select value={selectedStudent} onValueChange={setSelectedStudent}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um aluno" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {students.map(student => (
+                        <SelectItem key={student.id} value={student.id.toString()}>
+                          {student.nome} - {student.classe}ª Classe, Turma {student.turma}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {reportType === "class-turma" && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Classe</label>
+                    <Select value={selectedClass} onValueChange={setSelectedClass}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {uniqueClasses.map(classe => (
+                          <SelectItem key={classe} value={classe}>{classe}ª Classe</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Turma</label>
+                    <Select value={selectedTurma} onValueChange={setSelectedTurma}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {uniqueTurmas.map(turma => (
+                          <SelectItem key={turma} value={turma}>Turma {turma}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Curso</label>
+                    <Select value={selectedCurso} onValueChange={setSelectedCurso}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {uniqueCursos.map(curso => (
+                          <SelectItem key={curso} value={curso}>{curso}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              )}
+
+              {reportType === "class-all" && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Classe</label>
+                    <Select value={selectedClass} onValueChange={setSelectedClass}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {uniqueClasses.map(classe => (
+                          <SelectItem key={classe} value={classe}>{classe}ª Classe</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Curso</label>
+                    <Select value={selectedCurso} onValueChange={setSelectedCurso}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {uniqueCursos.map(curso => (
+                          <SelectItem key={curso} value={curso}>{curso}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Ações */}
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 pt-2">
+              <Button onClick={exportToCSV} variant="outline" size="sm" className="w-full sm:w-auto">
+                <Download className="w-4 h-4 mr-2" />
+                Exportar CSV
+              </Button>
+              <Button onClick={printReport} variant="outline" size="sm" className="w-full sm:w-auto">
+                <Printer className="w-4 h-4 mr-2" />
+                Imprimir
+              </Button>
             </div>
           </div>
         </CardContent>
