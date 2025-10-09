@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { useStudents } from "@/contexts/StudentsContext";
 import { Student } from "@/types/student";
 import { FileText, Download, Printer, BarChart3, Users, Calculator } from "lucide-react";
-import angolaEmblem from "@/assets/angola-emblem.png";
 
 export const ReportsPage = () => {
   const { students, getStudentsByClass } = useStudents();
@@ -256,7 +255,7 @@ export const ReportsPage = () => {
         <body>
           <div class="header">
             <div class="header-top">
-              <img src="${angolaEmblem}" alt="Insígnia de Angola" class="emblem" />
+              <img src="/ra.webp" alt="Insígnia de Angola" class="emblem" />
               <div class="header-text">
                 <div class="country-name">República de Angola</div>
                 <div class="school-name">Escola Nova Geração</div>
