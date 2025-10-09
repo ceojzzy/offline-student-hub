@@ -402,7 +402,7 @@ export const ReportsPage = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {uniqueClasses.map(classe => (
-                          <SelectItem key={classe} value={classe}>{classe}ª Classe</SelectItem>
+                          <SelectItem key={classe} value={classe}>{classe}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -448,7 +448,7 @@ export const ReportsPage = () => {
                       </SelectTrigger>
                       <SelectContent>
                         {uniqueClasses.map(classe => (
-                          <SelectItem key={classe} value={classe}>{classe}ª Classe</SelectItem>
+                          <SelectItem key={classe} value={classe}>{classe}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
