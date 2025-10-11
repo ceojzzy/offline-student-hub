@@ -13,11 +13,13 @@ export const ReportsPage = () => {
   const [selectedStudent, setSelectedStudent] = useState<string>("");
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [selectedTurma, setSelectedTurma] = useState<string>("");
+  const [selectedPeriodo, setSelectedPeriodo] = useState<string>("");
   const [selectedCurso, setSelectedCurso] = useState<string>("");
 
   // Obter valores únicos
   const uniqueClasses = [...new Set(students.map(s => s.classe))].sort();
   const uniqueTurmas = [...new Set(students.map(s => s.turma))].sort();
+  const uniquePeriodos = [...new Set(students.map(s => s.periodo))].sort();
   const uniqueCursos = [...new Set(students.map(s => s.curso))].sort();
 
   const getFilteredStudents = () => {
@@ -31,9 +33,10 @@ export const ReportsPage = () => {
         filtered = [];
       }
     } else if (reportType === "class-turma") {
-      // Relatório por classe, turma e curso
+      // Relatório por classe, turma, período e curso
       if (selectedClass) filtered = filtered.filter(s => s.classe === selectedClass);
       if (selectedTurma) filtered = filtered.filter(s => s.turma === selectedTurma);
+      if (selectedPeriodo) filtered = filtered.filter(s => s.periodo === selectedPeriodo);
       if (selectedCurso) filtered = filtered.filter(s => s.curso === selectedCurso);
     } else if (reportType === "class-all") {
       // Relatório por classe e curso (todas as turmas)
@@ -212,7 +215,7 @@ export const ReportsPage = () => {
       const student = students.find(s => s.id.toString() === selectedStudent);
       reportTitle = student ? `Relatório Individual - ${student.nome}` : "Relatório Individual";
     } else if (reportType === "class-turma") {
-      reportTitle = `${selectedClass}ª Classe, Turma ${selectedTurma} - ${selectedCurso}`;
+      reportTitle = `${selectedClass}ª Classe, Turma ${selectedTurma}, ${selectedPeriodo} - ${selectedCurso}`;
     } else if (reportType === "class-all") {
       reportTitle = `${selectedClass}ª Classe, Todas as Turmas - ${selectedCurso}`;
     }
@@ -363,6 +366,7 @@ export const ReportsPage = () => {
                 setSelectedStudent("");
                 setSelectedClass("");
                 setSelectedTurma("");
+                setSelectedPeriodo("");
                 setSelectedCurso("");
               }}>
                 <SelectTrigger>
@@ -370,7 +374,7 @@ export const ReportsPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="student">Por Aluno (Relatório Individual)</SelectItem>
-                  <SelectItem value="class-turma">Por Classe, Turma e Curso</SelectItem>
+                  <SelectItem value="class-turma">Por Classe, Turma, Período e Curso</SelectItem>
                   <SelectItem value="class-all">Por Classe e Curso (Todas as Turmas)</SelectItem>
                 </SelectContent>
               </Select>
@@ -421,6 +425,20 @@ export const ReportsPage = () => {
                       <SelectContent>
                         {uniqueTurmas.map(turma => (
                           <SelectItem key={turma} value={turma}>Turma {turma}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Período</label>
+                    <Select value={selectedPeriodo} onValueChange={setSelectedPeriodo}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {uniquePeriodos.map(periodo => (
+                          <SelectItem key={periodo} value={periodo}>{periodo}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
