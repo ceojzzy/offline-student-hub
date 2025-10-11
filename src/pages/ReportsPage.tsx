@@ -16,11 +16,11 @@ export const ReportsPage = () => {
   const [selectedPeriodo, setSelectedPeriodo] = useState<string>("");
   const [selectedCurso, setSelectedCurso] = useState<string>("");
 
-  // Obter valores únicos
-  const uniqueClasses = [...new Set(students.map(s => s.classe))].sort();
-  const uniqueTurmas = [...new Set(students.map(s => s.turma))].sort();
-  const uniquePeriodos = [...new Set(students.map(s => s.periodo))].sort();
-  const uniqueCursos = [...new Set(students.map(s => s.curso))].sort();
+  // Obter valores únicos (filtrando valores vazios)
+  const uniqueClasses = [...new Set(students.map(s => s.classe))].filter(v => v).sort();
+  const uniqueTurmas = [...new Set(students.map(s => s.turma))].filter(v => v).sort();
+  const uniquePeriodos = [...new Set(students.map(s => s.periodo))].filter(v => v).sort();
+  const uniqueCursos = [...new Set(students.map(s => s.curso))].filter(v => v).sort();
 
   const getFilteredStudents = () => {
     let filtered = students;
