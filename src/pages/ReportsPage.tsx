@@ -270,8 +270,10 @@ export const ReportsPage = () => {
               <tr>
                 <th rowspan="2">Nº</th>
                 <th rowspan="2" class="student-info">Nome</th>
+                ${reportType !== "class-turma" ? `
                 <th rowspan="2">Classe</th>
                 <th rowspan="2">Turma</th>
+                ` : ''}
                 ${disciplinesList.map(disc => `
                   <th colspan="4" class="discipline-header">${disc}</th>
                 `).join('')}
@@ -292,8 +294,10 @@ export const ReportsPage = () => {
                 <tr>
                   <td>${student.numero}</td>
                   <td class="student-info">${student.nome}</td>
+                  ${reportType !== "class-turma" ? `
                   <td>${student.classe}</td>
                   <td>${student.turma}</td>
+                  ` : ''}
                   ${disciplinesList.map(discName => {
                     const disc = student.notas.find(d => d.disciplina === discName);
                     if (disc) {
@@ -583,8 +587,12 @@ export const ReportsPage = () => {
                         <tr className="bg-muted/50">
                           <th rowSpan={2} className="p-2 border border-border text-left sticky left-0 bg-muted/50 z-10">Nº</th>
                           <th rowSpan={2} className="p-2 border border-border text-left sticky left-12 bg-muted/50 z-10 min-w-[150px]">Nome</th>
-                          <th rowSpan={2} className="p-2 border border-border text-center">Classe</th>
-                          <th rowSpan={2} className="p-2 border border-border text-center">Turma</th>
+                          {reportType !== "class-turma" && (
+                            <>
+                              <th rowSpan={2} className="p-2 border border-border text-center">Classe</th>
+                              <th rowSpan={2} className="p-2 border border-border text-center">Turma</th>
+                            </>
+                          )}
                           {disciplinesList.map(disc => (
                             <th key={disc} colSpan={9} className="p-2 border border-border text-center bg-muted/70 font-bold">
                               {disc}
@@ -615,8 +623,12 @@ export const ReportsPage = () => {
                           <tr key={idx} className="hover:bg-muted/10">
                             <td className="p-2 border border-border text-center sticky left-0 bg-background">{student.numero}</td>
                             <td className="p-2 border border-border font-medium sticky left-12 bg-background">{student.nome}</td>
-                            <td className="p-2 border border-border text-center">{student.classe}</td>
-                            <td className="p-2 border border-border text-center">{student.turma}</td>
+                            {reportType !== "class-turma" && (
+                              <>
+                                <td className="p-2 border border-border text-center">{student.classe}</td>
+                                <td className="p-2 border border-border text-center">{student.turma}</td>
+                              </>
+                            )}
                             {disciplinesList.map(discName => {
                               const disc = student.notas.find(d => d.disciplina === discName);
                               if (disc) {
