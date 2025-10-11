@@ -211,9 +211,15 @@ export const ReportsPage = () => {
     const reportData = generateGradeReport();
     
     let reportTitle = "";
+    let studentHeader = "";
     if (reportType === "student") {
       const student = students.find(s => s.id.toString() === selectedStudent);
-      reportTitle = student ? `Relatório Individual - ${student.nome}` : "Relatório Individual";
+      if (student) {
+        reportTitle = "Relatório Individual";
+        studentHeader = `${student.nome} - ${student.classe}ª Classe, Turma ${student.turma} - ${student.curso}`;
+      } else {
+        reportTitle = "Relatório Individual";
+      }
     } else if (reportType === "class-turma") {
       reportTitle = `${selectedClass}ª Classe, Turma ${selectedTurma}, ${selectedPeriodo} - ${selectedCurso}`;
     } else if (reportType === "class-all") {
@@ -227,6 +233,94 @@ export const ReportsPage = () => {
     });
     const disciplinesList = Array.from(allDisciplines);
     
+    // Para relatório individual, usar layout diferente
+    if (reportType === "student") {
+      const student = reportData[0];
+      const printContent = `
+        <html>
+          <head>
+            <title>Relatório Individual - ${student?.nome || ''}</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; font-size: 11px; }
+              .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 15px; }
+              .header-top { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 10px; }
+              .emblem { width: 60px; height: 60px; }
+              .header-text { text-align: center; }
+              .country-name { font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
+              .school-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+              .report-title { font-size: 14px; margin-bottom: 3px; font-weight: bold; }
+              .student-header { font-size: 12px; margin-top: 5px; font-weight: bold; }
+              .report-date { font-size: 10px; color: #666; margin-top: 5px; }
+              table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+              th, td { border: 1px solid #333; padding: 8px; font-size: 10px; }
+              th { background-color: #e0e0e0; font-weight: bold; text-align: center; }
+              td { text-align: center; }
+              .discipline-name { text-align: left; font-weight: 500; }
+              .obs-cell { font-weight: bold; }
+              @media print {
+                @page { margin: 15mm; }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <div class="header-top">
+                <img src="/ra.webp" alt="Insígnia de Angola" class="emblem" />
+                <div class="header-text">
+                  <div class="country-name">República de Angola</div>
+                  <div class="school-name">Escola Nova Geração</div>
+                </div>
+              </div>
+              <div class="report-title">${reportTitle}</div>
+              ${studentHeader ? `<div class="student-header">${studentHeader}</div>` : ''}
+              <div class="report-date">Gerado em: ${new Date().toLocaleDateString('pt-BR')}</div>
+            </div>
+            
+            <table>
+              <thead>
+                <tr>
+                  <th>Disciplinas</th>
+                  <th>Notas do Iº trimestre</th>
+                  <th>N. do IIº Trimestre</th>
+                  <th>N. do IIIº Trimestre</th>
+                  <th>Média Final</th>
+                  <th>OBS</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${student?.notas.map(disc => {
+                  const mt1 = calculateMT(disc.trimestre1);
+                  const mt2 = calculateMT(disc.trimestre2);
+                  const mt3 = calculateMT(disc.trimestre3);
+                  const mfd = calculateMFD(disc);
+                  const status = mfd >= 10 ? 'Aprovado' : mfd > 0 ? 'Reprovado' : '-';
+                  return `
+                    <tr>
+                      <td class="discipline-name">${disc.disciplina}</td>
+                      <td>${mt1 > 0 ? mt1.toFixed(1) : '-'}</td>
+                      <td>${mt2 > 0 ? mt2.toFixed(1) : '-'}</td>
+                      <td>${mt3 > 0 ? mt3.toFixed(1) : '-'}</td>
+                      <td><strong>${mfd > 0 ? mfd.toFixed(1) : '-'}</strong></td>
+                      <td class="obs-cell">${status}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </body>
+        </html>
+      `;
+      
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(printContent);
+        printWindow.document.close();
+        printWindow.print();
+      }
+      return;
+    }
+    
+    // Para outros tipos de relatórios
     const printContent = `
       <html>
         <head>
@@ -591,6 +685,62 @@ export const ReportsPage = () => {
               {/* Desktop Table - Consolidated Grade Report */}
               <div className="hidden lg:block overflow-x-auto">
                 {(() => {
+                  // Para relatório individual, usar layout simplificado
+                  if (reportType === "student" && reportData.length === 1) {
+                    const student = reportData[0];
+                    return (
+                      <>
+                        <div className="mb-4 p-4 bg-muted/30 rounded-lg">
+                          <h3 className="text-lg font-bold">{student.nome}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {student.classe}ª Classe, Turma {student.turma} - {student.curso}
+                          </p>
+                        </div>
+                        <table className="w-full text-sm border-collapse">
+                          <thead>
+                            <tr className="bg-muted/50">
+                              <th className="p-3 border border-border text-left font-bold">Disciplinas</th>
+                              <th className="p-3 border border-border text-center font-bold">Notas do Iº trimestre</th>
+                              <th className="p-3 border border-border text-center font-bold">N. do IIº Trimestre</th>
+                              <th className="p-3 border border-border text-center font-bold">N. do IIIº Trimestre</th>
+                              <th className="p-3 border border-border text-center font-bold">Média Final</th>
+                              <th className="p-3 border border-border text-center font-bold">OBS</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {student.notas.map((disc, idx) => {
+                              const mt1 = calculateMT(disc.trimestre1);
+                              const mt2 = calculateMT(disc.trimestre2);
+                              const mt3 = calculateMT(disc.trimestre3);
+                              const mfd = calculateMFD(disc);
+                              const status = mfd >= 10 ? 'Aprovado' : mfd > 0 ? 'Reprovado' : '-';
+                              return (
+                                <tr key={idx} className="hover:bg-muted/10">
+                                  <td className="p-3 border border-border font-medium">{disc.disciplina}</td>
+                                  <td className="p-3 border border-border text-center">{mt1 > 0 ? mt1.toFixed(1) : '-'}</td>
+                                  <td className="p-3 border border-border text-center">{mt2 > 0 ? mt2.toFixed(1) : '-'}</td>
+                                  <td className="p-3 border border-border text-center">{mt3 > 0 ? mt3.toFixed(1) : '-'}</td>
+                                  <td className="p-3 border border-border text-center font-bold text-base">{mfd > 0 ? mfd.toFixed(1) : '-'}</td>
+                                  <td className="p-3 border border-border text-center font-bold">
+                                    <Badge 
+                                      variant={
+                                        status === "Aprovado" ? "default" : 
+                                        status === "Reprovado" ? "destructive" : 
+                                        "secondary"
+                                      }
+                                    >
+                                      {status}
+                                    </Badge>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </>
+                    );
+                  }
+                  
                   // Get all unique disciplines across all students
                   const allDisciplines = new Set<string>();
                   reportData.forEach(student => {

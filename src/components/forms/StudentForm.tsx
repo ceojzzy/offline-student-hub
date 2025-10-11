@@ -160,9 +160,18 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Período</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ex: Manhã, Tarde" {...field} />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o período" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Manhã">Manhã</SelectItem>
+                        <SelectItem value="Tarde">Tarde</SelectItem>
+                        <SelectItem value="Noite">Noite</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
