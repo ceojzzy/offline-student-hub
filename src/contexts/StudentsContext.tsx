@@ -4,55 +4,6 @@ import { toast } from "sonner";
 
 const STORAGE_KEY = "alunos";
 
-const EXAMPLE_STUDENTS: Student[] = [
-  {
-    id: 1,
-    nome: "João Silva",
-    numero: "001",
-    classe: "10ª Classe",
-    turma: "A",
-    curso: "Ciências Físicas e Biológicas",
-    periodo: "Manhã",
-    notas: [
-      { 
-        disciplina: "Matemática", 
-        trimestre1: { mac: "15", npp: "14", npt: "16" },
-        trimestre2: { mac: "16", npp: "15", npt: "17" },
-        trimestre3: { mac: "14", npp: "15", npt: "15" }
-      },
-      { 
-        disciplina: "Física", 
-        trimestre1: { mac: "14", npp: "13", npt: "15" },
-        trimestre2: { mac: "15", npp: "14", npt: "16" },
-        trimestre3: { mac: "15", npp: "16", npt: "14" }
-      },
-    ]
-  },
-  {
-    id: 2,
-    nome: "Maria Santos",
-    numero: "002",
-    classe: "10ª Classe",
-    turma: "A",
-    curso: "Ciências Físicas e Biológicas",
-    periodo: "Manhã",
-    notas: [
-      { 
-        disciplina: "Matemática", 
-        trimestre1: { mac: "17", npp: "16", npt: "18" },
-        trimestre2: { mac: "16", npp: "17", npt: "16" },
-        trimestre3: { mac: "18", npp: "17", npt: "19" }
-      },
-      { 
-        disciplina: "Física", 
-        trimestre1: { mac: "16", npp: "15", npt: "17" },
-        trimestre2: { mac: "17", npp: "16", npt: "18" },
-        trimestre3: { mac: "16", npp: "17", npt: "16" }
-      },
-    ]
-  },
-];
-
 interface StudentsContextType {
   students: Student[];
   addStudent: (studentData: StudentFormData) => Student;
@@ -78,12 +29,11 @@ export const StudentsProvider = ({ children }: { children: ReactNode }) => {
         console.log("Dados carregados do localStorage:", parsed.length, "alunos");
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
-        setStudents(EXAMPLE_STUDENTS);
+        setStudents([]);
       }
     } else {
-      console.log("Nenhum dado salvo, usando dados de exemplo");
-      setStudents(EXAMPLE_STUDENTS);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(EXAMPLE_STUDENTS));
+      console.log("Nenhum dado salvo, iniciando com lista vazia");
+      setStudents([]);
     }
   }, []);
 
