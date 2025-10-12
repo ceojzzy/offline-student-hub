@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, GraduationCap, FileText, TrendingUp } from "lucide-react";
-import { Student } from "@/types/student";
+import { Student, DisciplinaNotas } from "@/types/student";
 import { useNavigate } from "react-router-dom";
 
 interface StatsCardsProps {
@@ -24,9 +24,12 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
   }, {} as { [key: string]: number });
 
   const studentsWithGrades = students.filter(student => {
-    return Object.values(student.notas).some(trimestre =>
-      Object.values(trimestre).some(nota => nota && !isNaN(parseFloat(nota)))
-    );
+    return student.notas.some(disciplina => {
+      return ['trimestre1', 'trimestre2', 'trimestre3'].some(trimestre => {
+        const notas = disciplina[trimestre as keyof Pick<DisciplinaNotas, 'trimestre1' | 'trimestre2' | 'trimestre3'>];
+        return notas.mac || notas.npp || notas.npt;
+      });
+    });
   }).length;
 
   const totalClasses = Object.keys(classesCounts).length;
