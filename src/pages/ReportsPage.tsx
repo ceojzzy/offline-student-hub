@@ -104,13 +104,7 @@ export const ReportsPage = () => {
     
     if (mt1 === 0 && mt2 === 0 && mt3 === 0) return 0;
     
-    let sum = 0;
-    let count = 0;
-    if (mt1 > 0) { sum += mt1; count++; }
-    if (mt2 > 0) { sum += mt2; count++; }
-    if (mt3 > 0) { sum += mt3; count++; }
-    
-    return count > 0 ? sum / count : 0;
+    return (mt1 + mt2 + mt3) / 3;
   };
 
   const generateGradeReport = () => {

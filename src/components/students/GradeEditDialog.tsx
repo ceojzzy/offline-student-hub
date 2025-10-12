@@ -91,14 +91,14 @@ export const GradeEditDialog = ({ student, isOpen, onClose, onUpdateGrade }: Gra
     const mt2 = calculateMT(disciplinaNotas.trimestre2);
     const mt3 = calculateMT(disciplinaNotas.trimestre3);
     
-    const values = [mt1, mt2, mt3]
-      .filter(mt => mt !== "")
-      .map(mt => parseFloat(mt));
+    const mt1Value = mt1 !== "" ? parseFloat(mt1) : 0;
+    const mt2Value = mt2 !== "" ? parseFloat(mt2) : 0;
+    const mt3Value = mt3 !== "" ? parseFloat(mt3) : 0;
     
-    if (values.length === 0) return "";
+    if (mt1 === "" && mt2 === "" && mt3 === "") return "";
     
-    const sum = values.reduce((acc, val) => acc + val, 0);
-    return (sum / values.length).toFixed(1);
+    const sum = mt1Value + mt2Value + mt3Value;
+    return (sum / 3).toFixed(1);
   };
 
   return (
