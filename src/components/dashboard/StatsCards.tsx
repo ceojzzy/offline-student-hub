@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, GraduationCap, FileText, TrendingUp } from "lucide-react";
+import { Users, GraduationCap, FileText, AlertTriangle } from "lucide-react";
 import { Student, DisciplinaNotas } from "@/types/student";
 import { useNavigate } from "react-router-dom";
 
@@ -23,8 +23,8 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
     return acc;
   }, {} as { [key: string]: number });
 
-  const studentsWithGrades = students.filter(student => {
-    return student.notas.some(disciplina => {
+  const studentsWithoutGrades = students.filter(student => {
+    return !student.notas.some(disciplina => {
       return ['trimestre1', 'trimestre2', 'trimestre3'].some(trimestre => {
         const notas = disciplina[trimestre as keyof Pick<DisciplinaNotas, 'trimestre1' | 'trimestre2' | 'trimestre3'>];
         return notas.mac || notas.npp || notas.npt;
@@ -61,11 +61,11 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
       onClick: () => navigate('/students')
     },
     {
-      title: "Com Avaliações",
-      value: studentsWithGrades,
-      description: "Alunos com notas",
-      icon: TrendingUp,
-      color: "from-orange-500 to-orange-600",
+      title: "Sem Avaliações",
+      value: studentsWithoutGrades,
+      description: "Alunos sem notas",
+      icon: AlertTriangle,
+      color: "from-red-500 to-red-600",
       onClick: () => navigate('/grades')
     }
   ];
