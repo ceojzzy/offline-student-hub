@@ -130,26 +130,20 @@ export const ReportsPage = () => {
   };
 
   const calculateStudentOverallAverage = (student: Student) => {
-    const allGrades: number[] = [];
-    
+    const disciplinasCount = student.notas.length;
+    if (disciplinasCount === 0) return 0;
+
+    let sumMGD = 0;
     student.notas.forEach(disciplina => {
-      ['trimestre1', 'trimestre2', 'trimestre3'].forEach(trimestre => {
-        const trimestreNotas = disciplina[trimestre as keyof typeof disciplina];
-        if (typeof trimestreNotas === 'object') {
-          ['mac', 'npp', 'npt'].forEach(tipo => {
-            const nota = trimestreNotas[tipo as keyof typeof trimestreNotas];
-            if (nota && !isNaN(parseFloat(nota))) {
-              allGrades.push(parseFloat(nota));
-            }
-          });
-        }
-      });
+      const mt1 = calculateMT(disciplina.trimestre1);
+      const mt2 = calculateMT(disciplina.trimestre2);
+      const mt3 = calculateMT(disciplina.trimestre3);
+      const mgd = (mt1 + mt2 + mt3) / 3; // conta sempre os 3 trimestres
+      sumMGD += mgd;
     });
 
-    if (allGrades.length === 0) return 0;
-    return allGrades.reduce((sum, grade) => sum + grade, 0) / allGrades.length;
+    return sumMGD / disciplinasCount; // média das MGD por disciplina
   };
-
   const exportToCSV = () => {
     const reportData = generateGradeReport();
     
