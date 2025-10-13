@@ -120,10 +120,9 @@ export const GradesPage = () => {
                     const mt2 = calculateMT(student.notas, 'trimestre2');
                     const mt3 = calculateMT(student.notas, 'trimestre3');
                     
-                    const mts = [mt1, mt2, mt3].filter(mt => mt > 0);
-                    const mfd = mts.length > 0 
-                      ? mts.reduce((acc, val) => acc + val, 0) / mts.length 
-                      : 0;
+                    const mfd = mt1 === 0 && mt2 === 0 && mt3 === 0 
+                      ? 0 
+                      : (mt1 + mt2 + mt3) / 3;
                     
                     const getStatus = (avg: number) => 
                       avg >= 14 ? 'default' : avg >= 10 ? 'secondary' : 'destructive';
