@@ -137,14 +137,14 @@ export const GradesPage = () => {
                         {[mt1, mt2, mt3].map((mt, idx) => (
                           <TableCell key={idx} className="text-center">
                             <Badge variant={getStatus(mt)}>
-                              {mt > 0 ? mt.toFixed(1) : "—"}
+                              {mt.toFixed(1)}
                             </Badge>
                           </TableCell>
                         ))}
                         <TableCell className="text-center">
-                          <Badge variant={getStatus(mfd)} className="font-bold">
-                            {mfd > 0 ? mfd.toFixed(1) : "—"}
-                          </Badge>
+                            <Badge variant={getStatus(mfd)} className="font-bold">
+                              {mfd.toFixed(1)}
+                            </Badge>
                         </TableCell>
                       </TableRow>
                     );

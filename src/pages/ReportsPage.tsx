@@ -285,10 +285,10 @@ export const ReportsPage = () => {
                   return `
                     <tr>
                       <td class="discipline-name">${disc.disciplina}</td>
-                      <td>${mt1 > 0 ? mt1.toFixed(1) : '-'}</td>
-                      <td>${mt2 > 0 ? mt2.toFixed(1) : '-'}</td>
-                      <td>${mt3 > 0 ? mt3.toFixed(1) : '-'}</td>
-                      <td><strong>${mfd > 0 ? mfd.toFixed(1) : '-'}</strong></td>
+                      <td>${mt1.toFixed(1)}</td>
+                      <td>${mt2.toFixed(1)}</td>
+                      <td>${mt3.toFixed(1)}</td>
+                      <td><strong>${mfd.toFixed(1)}</strong></td>
                       <td class="obs-cell">${status}</td>
                     </tr>
                   `;
@@ -391,10 +391,10 @@ export const ReportsPage = () => {
                       const mt3 = calculateMT(disc.trimestre3);
                       const mfd = calculateMFD(disc);
                       return `
-                        <td>${mt1 > 0 ? mt1.toFixed(1) : '-'}</td>
-                        <td>${mt2 > 0 ? mt2.toFixed(1) : '-'}</td>
-                        <td>${mt3 > 0 ? mt3.toFixed(1) : '-'}</td>
-                        <td><strong>${mfd > 0 ? mfd.toFixed(1) : '-'}</strong></td>
+                         <td>${mt1.toFixed(1)}</td>
+                         <td>${mt2.toFixed(1)}</td>
+                         <td>${mt3.toFixed(1)}</td>
+                         <td><strong>${mfd.toFixed(1)}</strong></td>
                       `;
                     } else {
                       return '<td>-</td><td>-</td><td>-</td><td>-</td>';
@@ -705,10 +705,10 @@ export const ReportsPage = () => {
                               return (
                                 <tr key={idx} className="hover:bg-muted/10">
                                   <td className="p-3 border border-border font-medium">{disc.disciplina}</td>
-                                  <td className="p-3 border border-border text-center">{mt1 > 0 ? mt1.toFixed(1) : '-'}</td>
-                                  <td className="p-3 border border-border text-center">{mt2 > 0 ? mt2.toFixed(1) : '-'}</td>
-                                  <td className="p-3 border border-border text-center">{mt3 > 0 ? mt3.toFixed(1) : '-'}</td>
-                                  <td className="p-3 border border-border text-center font-bold text-base">{mfd > 0 ? mfd.toFixed(1) : '-'}</td>
+                                  <td className="p-3 border border-border text-center">{mt1.toFixed(1)}</td>
+                                  <td className="p-3 border border-border text-center">{mt2.toFixed(1)}</td>
+                                  <td className="p-3 border border-border text-center">{mt3.toFixed(1)}</td>
+                                  <td className="p-3 border border-border text-center font-bold text-base">{mfd.toFixed(1)}</td>
                                   <td className="p-3 border border-border text-center font-bold">
                                     <Badge 
                                       variant={
@@ -818,7 +818,7 @@ export const ReportsPage = () => {
                               }
                             })}
                             <td className="p-2 border border-border text-center font-bold text-base">
-                              {student.media > 0 ? student.media.toFixed(1) : '-'}
+                              {student.media.toFixed(1)}
                             </td>
                             <td className="p-2 border border-border text-center font-bold">
                               <Badge 
@@ -886,28 +886,26 @@ export const ReportsPage = () => {
                                   <p>MAC: {disciplina.trimestre1.mac || '-'}</p>
                                   <p>NPP: {disciplina.trimestre1.npp || '-'}</p>
                                   <p>NPT: {disciplina.trimestre1.npt || '-'}</p>
-                                  {mt1 > 0 && <p className="font-bold text-primary mt-1">MT: {mt1.toFixed(1)}</p>}
+                                  <p className="font-bold text-primary mt-1">MT: {mt1.toFixed(1)}</p>
                                 </div>
                                 <div>
                                   <p className="font-medium text-muted-foreground mb-1">2º Trim.</p>
                                   <p>MAC: {disciplina.trimestre2.mac || '-'}</p>
                                   <p>NPP: {disciplina.trimestre2.npp || '-'}</p>
                                   <p>NPT: {disciplina.trimestre2.npt || '-'}</p>
-                                  {mt2 > 0 && <p className="font-bold text-primary mt-1">MT: {mt2.toFixed(1)}</p>}
+                                  <p className="font-bold text-primary mt-1">MT: {mt2.toFixed(1)}</p>
                                 </div>
                                 <div>
                                   <p className="font-medium text-muted-foreground mb-1">3º Trim.</p>
                                   <p>MAC: {disciplina.trimestre3.mac || '-'}</p>
                                   <p>NPP: {disciplina.trimestre3.npp || '-'}</p>
                                   <p>NPT: {disciplina.trimestre3.npt || '-'}</p>
-                                  {mt3 > 0 && <p className="font-bold text-primary mt-1">MT: {mt3.toFixed(1)}</p>}
+                                  <p className="font-bold text-primary mt-1">MT: {mt3.toFixed(1)}</p>
                                 </div>
                               </div>
-                              {mfd > 0 && (
                                 <div className="mt-2 pt-2 border-t border-border">
                                   <span className="text-sm font-bold">MFD: {mfd.toFixed(1)}</span>
                                 </div>
-                              )}
                             </div>
                           );
                         })}
