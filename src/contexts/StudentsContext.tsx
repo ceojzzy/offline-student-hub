@@ -10,6 +10,7 @@ interface StudentsContextType {
   updateStudent: (id: number, updates: Partial<Student>) => void;
   updateGrade: (studentId: number, gradeData: GradeInput) => void;
   deleteStudent: (id: number) => void;
+  clearAllStudents: () => void;
   getStudentsByClass: () => { [key: string]: Student[] };
   searchStudents: (query: string) => Student[];
   totalStudents: number;
@@ -103,6 +104,12 @@ export const StudentsProvider = ({ children }: { children: ReactNode }) => {
     toast.success("Aluno removido!");
   };
 
+  const clearAllStudents = () => {
+    setStudents([]);
+    localStorage.removeItem(STORAGE_KEY);
+    toast.success("Todos os alunos foram removidos!");
+  };
+
   const getStudentsByClass = () => {
     const groups: { [key: string]: Student[] } = {};
     
@@ -146,6 +153,7 @@ export const StudentsProvider = ({ children }: { children: ReactNode }) => {
       updateStudent,
       updateGrade,
       deleteStudent,
+      clearAllStudents,
       getStudentsByClass,
       searchStudents,
       totalStudents: students.length

@@ -6,7 +6,18 @@ import { ClassGroup } from "@/components/students/ClassGroup";
 import { useStudents } from "@/contexts/StudentsContext";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { Search, UserPlus } from "lucide-react";
+import { Search, UserPlus, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export const StudentsPage = () => {
   const [showForm, setShowForm] = useState(false);
@@ -15,7 +26,8 @@ export const StudentsPage = () => {
     students, 
     addStudent, 
     updateGrade, 
-    deleteStudent, 
+    deleteStudent,
+    clearAllStudents,
     getStudentsByClass,
     searchStudents 
   } = useStudents();
@@ -105,13 +117,44 @@ export const StudentsPage = () => {
           </p>
         </div>
         
-        <Button 
-          onClick={() => navigate("/add-student")}
-          className="bg-primary hover:bg-primary-glow"
-        >
-          <UserPlus className="w-4 h-4 mr-2" />
-          Novo Aluno
-        </Button>
+        <div className="flex gap-2">
+          {students.length > 0 && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Limpar Todos
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Tem certeza absoluta?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta ação não pode ser desfeita. Todos os {students.length} alunos cadastrados 
+                    e suas notas serão permanentemente removidos do sistema.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={clearAllStudents}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Sim, limpar todos os alunos
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+          
+          <Button 
+            onClick={() => navigate("/add-student")}
+            className="bg-primary hover:bg-primary-glow"
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            Novo Aluno
+          </Button>
+        </div>
       </div>
 
       {/* Busca Global */}
