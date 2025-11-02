@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
 export const AddStudentPage = () => {
-  const { addStudent } = useStudents();
+  const { addStudent, students } = useStudents();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Obter classes e turmas únicas dos alunos existentes
+  const existingClasses = [...new Set(students.map(s => s.classe).filter(Boolean))].sort();
+  const existingTurmas = [...new Set(students.map(s => s.turma).filter(Boolean))].sort();
 
   const handleAddStudent = (studentData: any) => {
     try {
@@ -55,6 +59,8 @@ export const AddStudentPage = () => {
         isOpen={true}
         onSubmit={handleAddStudent}
         onCancel={() => navigate(-1)}
+        existingClasses={existingClasses}
+        existingTurmas={existingTurmas}
       />
     </div>
   );

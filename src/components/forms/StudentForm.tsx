@@ -23,9 +23,11 @@ interface StudentFormProps {
   onSubmit: (data: StudentFormData) => void;
   onCancel: () => void;
   isOpen: boolean;
+  existingClasses?: string[];
+  existingTurmas?: string[];
 }
 
-export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) => {
+export const StudentForm = ({ onSubmit, onCancel, isOpen, existingClasses = [], existingTurmas = [] }: StudentFormProps) => {
   const form = useForm<StudentFormData>({
     resolver: zodResolver(studentFormSchema),
     defaultValues: {
@@ -107,13 +109,21 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
                           {...field} 
                         />
                         <datalist id="classes-list">
-                          <option value="7ª" />
-                          <option value="8ª" />
-                          <option value="9ª" />
-                          <option value="10ª" />
-                          <option value="11ª" />
-                          <option value="12ª" />
-                          <option value="13ª" />
+                          {existingClasses.length > 0 ? (
+                            existingClasses.map((classe) => (
+                              <option key={classe} value={classe} />
+                            ))
+                          ) : (
+                            <>
+                              <option value="7ª" />
+                              <option value="8ª" />
+                              <option value="9ª" />
+                              <option value="10ª" />
+                              <option value="11ª" />
+                              <option value="12ª" />
+                              <option value="13ª" />
+                            </>
+                          )}
                         </datalist>
                       </div>
                     </FormControl>
@@ -136,12 +146,20 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
                           {...field} 
                         />
                         <datalist id="turmas-list">
-                          <option value="A" />
-                          <option value="B" />
-                          <option value="C" />
-                          <option value="D" />
-                          <option value="E" />
-                          <option value="F" />
+                          {existingTurmas.length > 0 ? (
+                            existingTurmas.map((turma) => (
+                              <option key={turma} value={turma} />
+                            ))
+                          ) : (
+                            <>
+                              <option value="A" />
+                              <option value="B" />
+                              <option value="C" />
+                              <option value="D" />
+                              <option value="E" />
+                              <option value="F" />
+                            </>
+                          )}
                         </datalist>
                       </div>
                     </FormControl>
