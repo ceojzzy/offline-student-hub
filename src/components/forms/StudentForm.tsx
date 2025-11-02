@@ -99,19 +99,24 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Classe</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione a classe" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="10ª">10ª Classe</SelectItem>
-                        <SelectItem value="11ª">11ª Classe</SelectItem>
-                        <SelectItem value="12ª">12ª Classe</SelectItem>
-                        <SelectItem value="13ª">13ª Classe</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <div className="relative">
+                        <Input 
+                          placeholder="Digite ou selecione a classe" 
+                          list="classes-list"
+                          {...field} 
+                        />
+                        <datalist id="classes-list">
+                          <option value="7ª" />
+                          <option value="8ª" />
+                          <option value="9ª" />
+                          <option value="10ª" />
+                          <option value="11ª" />
+                          <option value="12ª" />
+                          <option value="13ª" />
+                        </datalist>
+                      </div>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -123,18 +128,23 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Turma</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione a turma" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="A">Turma A</SelectItem>
-                        <SelectItem value="B">Turma B</SelectItem>
-                        <SelectItem value="C">Turma C</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <div className="relative">
+                        <Input 
+                          placeholder="Digite ou selecione a turma" 
+                          list="turmas-list"
+                          {...field} 
+                        />
+                        <datalist id="turmas-list">
+                          <option value="A" />
+                          <option value="B" />
+                          <option value="C" />
+                          <option value="D" />
+                          <option value="E" />
+                          <option value="F" />
+                        </datalist>
+                      </div>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
