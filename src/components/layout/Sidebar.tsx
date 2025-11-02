@@ -76,6 +76,15 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
+      {/* Logo wrapper */}
+      <div className="flex items-center justify-center p-4">
+        <img 
+          src="/logo-escolar/wrapper.png" 
+          alt="Logo Escola" 
+          className="w-full max-w-[200px] h-auto object-contain group-data-[collapsible=icon]:hidden"
+        />
+      </div>
+
       {/* Footer */}
       <SidebarFooter className="border-t border-border p-4">
         <div className="flex items-center justify-center">
