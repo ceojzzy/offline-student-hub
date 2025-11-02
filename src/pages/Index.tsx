@@ -33,7 +33,9 @@ const Index = () => {
             <img 
               src="/logo-escolar/logo100.png" 
               alt="Logo Escola Nova Geração" 
-              className="h-10 w-10 object-contain"
+              className="h-10 w-10 object-contain select-none pointer-events-none"
+              draggable="false"
+              onContextMenu={(e) => e.preventDefault()}
             />
           </header>
 

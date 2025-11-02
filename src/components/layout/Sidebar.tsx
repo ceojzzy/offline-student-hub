@@ -81,7 +81,9 @@ export function AppSidebar() {
         <img 
           src="/logo-escolar/wrapper.png" 
           alt="Logo Escola" 
-          className="w-full max-w-[200px] h-auto object-contain group-data-[collapsible=icon]:hidden"
+          className="w-full max-w-[200px] h-auto object-contain select-none pointer-events-none group-data-[collapsible=icon]:hidden"
+          draggable="false"
+          onContextMenu={(e) => e.preventDefault()}
         />
       </div>
 
