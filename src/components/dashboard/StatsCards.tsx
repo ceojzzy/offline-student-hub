@@ -71,7 +71,7 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-4 md:mb-6 lg:mb-8">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         
@@ -81,17 +81,17 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
             className="border border-border hover:shadow-lg transition-all cursor-pointer hover:scale-105"
             onClick={stat.onClick}
           >
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-3 sm:p-4 md:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground leading-tight">
                 {stat.title}
               </CardTitle>
-              <div className={`w-8 h-8 bg-gradient-to-br ${stat.color} rounded-lg flex items-center justify-center`}>
-                <Icon className="w-4 h-4 text-white" />
+              <div className={`w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br ${stat.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">{stat.description}</p>
+            <CardContent className="p-3 sm:p-4 md:p-6 pt-0">
+              <div className="text-xl sm:text-2xl font-bold text-foreground">{stat.value}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">{stat.description}</p>
             </CardContent>
           </Card>
         );

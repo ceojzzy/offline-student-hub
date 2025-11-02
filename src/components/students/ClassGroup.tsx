@@ -38,20 +38,20 @@ export const ClassGroup = ({ className, students, onUpdateGrade, onDeleteStudent
   const { totalStudents, studentsWithGrades } = getClassStats();
 
   return (
-    <Card className="mb-6">
-      <CardHeader className="pb-4">
+    <Card className="mb-4 md:mb-6">
+      <CardHeader className="pb-3 md:pb-4 p-3 sm:p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
-              <Users className="w-5 h-5 text-primary-foreground" />
+          <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center flex-shrink-0">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
             </div>
-            <div>
-              <CardTitle className="text-lg">{className}</CardTitle>
-              <div className="flex items-center space-x-2 mt-1">
-                <Badge variant="secondary" className="text-xs">
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-base sm:text-lg truncate">{className}</CardTitle>
+              <div className="flex items-center gap-1.5 sm:gap-2 mt-1 flex-wrap">
+                <Badge variant="secondary" className="text-[10px] sm:text-xs">
                   {totalStudents} alunos
                 </Badge>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-[10px] sm:text-xs">
                   {studentsWithGrades} com notas
                 </Badge>
               </div>
@@ -62,12 +62,12 @@ export const ClassGroup = ({ className, students, onUpdateGrade, onDeleteStudent
             variant="ghost"
             size="sm"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="h-8 w-8 p-0"
+            className="h-7 w-7 sm:h-8 sm:w-8 p-0 flex-shrink-0"
           >
             {isExpanded ? (
-              <ChevronUp className="w-4 h-4" />
+              <ChevronUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             ) : (
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             )}
           </Button>
         </div>
@@ -88,9 +88,9 @@ export const ClassGroup = ({ className, students, onUpdateGrade, onDeleteStudent
       </CardHeader>
 
       {isExpanded && (
-        <CardContent>
+        <CardContent className="p-3 sm:p-4 md:p-6">
           {filteredStudents.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="text-center py-6 sm:py-8 text-muted-foreground text-sm sm:text-base">
               {searchQuery ? (
                 <div>
                   <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />

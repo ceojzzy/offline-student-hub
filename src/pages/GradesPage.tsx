@@ -41,10 +41,10 @@ export const GradesPage = () => {
   const uniqueClasses = [...new Set(students.map(s => s.classe))].sort();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Notas e Avaliações</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Notas e Avaliações</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Mini-Pauta de Avaliação - Acompanhe o desempenho dos alunos
         </p>
       </div>
@@ -101,19 +101,20 @@ export const GradesPage = () => {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-16">Nº</TableHead>
-                    <TableHead>Nome</TableHead>
-                    <TableHead className="text-center">Classe/Turma</TableHead>
-                    <TableHead className="text-center">MT1</TableHead>
-                    <TableHead className="text-center">MT2</TableHead>
-                    <TableHead className="text-center">MT3</TableHead>
-                    <TableHead className="text-center">MFD</TableHead>
-                  </TableRow>
-                </TableHeader>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="inline-block min-w-full align-middle">
+                <Table className="min-w-[640px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12 sm:w-16 text-xs sm:text-sm">Nº</TableHead>
+                      <TableHead className="text-xs sm:text-sm">Nome</TableHead>
+                      <TableHead className="text-center text-xs sm:text-sm">Classe/Turma</TableHead>
+                      <TableHead className="text-center text-xs sm:text-sm">MT1</TableHead>
+                      <TableHead className="text-center text-xs sm:text-sm">MT2</TableHead>
+                      <TableHead className="text-center text-xs sm:text-sm">MT3</TableHead>
+                      <TableHead className="text-center text-xs sm:text-sm">MFD</TableHead>
+                    </TableRow>
+                  </TableHeader>
                 <TableBody>
                   {filteredStudents.map(student => {
                     const mt1 = calculateMT(student.notas, 'trimestre1');
@@ -129,20 +130,20 @@ export const GradesPage = () => {
 
                     return (
                       <TableRow key={student.id}>
-                        <TableCell className="font-medium">{student.numero}</TableCell>
-                        <TableCell className="font-medium">{student.nome}</TableCell>
-                        <TableCell className="text-center">
+                        <TableCell className="font-medium text-xs sm:text-sm">{student.numero}</TableCell>
+                        <TableCell className="font-medium text-xs sm:text-sm">{student.nome}</TableCell>
+                        <TableCell className="text-center text-xs sm:text-sm">
                           {student.classe} / {student.turma}
                         </TableCell>
                         {[mt1, mt2, mt3].map((mt, idx) => (
                           <TableCell key={idx} className="text-center">
-                            <Badge variant={getStatus(mt)}>
+                            <Badge variant={getStatus(mt)} className="text-xs">
                               {mt.toFixed(1)}
                             </Badge>
                           </TableCell>
                         ))}
                         <TableCell className="text-center">
-                            <Badge variant={getStatus(mfd)} className="font-bold">
+                            <Badge variant={getStatus(mfd)} className="font-bold text-xs">
                               {mfd.toFixed(1)}
                             </Badge>
                         </TableCell>
@@ -151,6 +152,7 @@ export const GradesPage = () => {
                   })}
                 </TableBody>
               </Table>
+              </div>
             </div>
           )}
         </CardContent>

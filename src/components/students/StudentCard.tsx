@@ -44,41 +44,41 @@ export const StudentCard = ({ student, onUpdateGrade, onDelete }: StudentCardPro
   return (
     <>
       <Card className="border border-border hover:shadow-md transition-shadow">
-        <CardContent className="p-4">
+        <CardContent className="p-3 sm:p-4">
           <div className="flex items-start justify-between mb-3">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-secondary to-muted rounded-full flex items-center justify-center">
-                <User className="w-5 h-5 text-muted-foreground" />
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-secondary to-muted rounded-full flex items-center justify-center flex-shrink-0">
+                <User className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
               </div>
-              <div>
-                <h4 className="font-semibold text-foreground">{student.nome}</h4>
-                <p className="text-sm text-muted-foreground">Nº {student.numero}</p>
+              <div className="min-w-0 flex-1">
+                <h4 className="font-semibold text-foreground text-sm sm:text-base truncate">{student.nome}</h4>
+                <p className="text-xs sm:text-sm text-muted-foreground">Nº {student.numero}</p>
               </div>
             </div>
-            <div className="flex space-x-1">
+            <div className="flex space-x-1 flex-shrink-0">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowGradeDialog(true)}
-                className="h-8 w-8 p-0"
+                className="h-7 w-7 sm:h-8 sm:w-8 p-0"
               >
-                <FileText className="w-4 h-4" />
+                <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onDelete(student.id)}
-                className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                className="h-7 w-7 sm:h-8 sm:w-8 p-0 text-destructive hover:text-destructive"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </Button>
             </div>
           </div>
 
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-xs sm:text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Curso:</span>
-              <span className="text-foreground">{student.curso}</span>
+              <span className="text-foreground truncate ml-2">{student.curso}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Período:</span>
@@ -87,10 +87,10 @@ export const StudentCard = ({ student, onUpdateGrade, onDelete }: StudentCardPro
           </div>
 
           {/* Médias por trimestre */}
-          <div className="mt-4 pt-3 border-t border-border">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-muted-foreground">Médias:</span>
-              <div className="flex space-x-2">
+          <div className="mt-3 sm:mt-4 pt-3 border-t border-border">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+              <span className="text-xs sm:text-sm font-medium text-muted-foreground">Médias:</span>
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {(['trimestre1', 'trimestre2', 'trimestre3'] as const).map((trimestre, index) => {
                   const average = calculateMT(trimestre);
                   const status = getGradeStatus(average);
@@ -99,7 +99,7 @@ export const StudentCard = ({ student, onUpdateGrade, onDelete }: StudentCardPro
                     <Badge
                       key={trimestre}
                       variant={status === "success" ? "default" : status === "warning" ? "secondary" : "outline"}
-                      className="text-xs"
+                      className="text-[10px] sm:text-xs"
                     >
                       MT{index + 1}: {average || "—"}
                     </Badge>

@@ -422,10 +422,10 @@ export const ReportsPage = () => {
   const reportData = generateGradeReport();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Relatórios</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Relatórios</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Gere relatórios e estatísticas do desempenho escolar
         </p>
       </div>
@@ -463,9 +463,9 @@ export const ReportsPage = () => {
             </div>
 
             {/* Filtros Dinâmicos */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               {reportType === "student" && (
-                <div className="space-y-2 lg:col-span-2">
+                <div className="space-y-2 sm:col-span-2">
                   <label className="text-sm font-medium">Aluno</label>
                   <Select value={selectedStudent} onValueChange={setSelectedStudent}>
                     <SelectTrigger>
@@ -576,14 +576,16 @@ export const ReportsPage = () => {
             </div>
 
             {/* Ações */}
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 pt-2">
+            <div className="flex flex-col sm:flex-row gap-2 pt-2">
               <Button onClick={exportToCSV} variant="outline" size="sm" className="w-full sm:w-auto">
                 <Download className="w-4 h-4 mr-2" />
-                Exportar CSV
+                <span className="hidden sm:inline">Exportar CSV</span>
+                <span className="sm:hidden">CSV</span>
               </Button>
               <Button onClick={printReport} variant="outline" size="sm" className="w-full sm:w-auto">
                 <Printer className="w-4 h-4 mr-2" />
-                Imprimir
+                <span className="hidden sm:inline">Imprimir</span>
+                <span className="sm:hidden">Print</span>
               </Button>
             </div>
           </div>
@@ -591,58 +593,58 @@ export const ReportsPage = () => {
       </Card>
 
       {/* Estatísticas */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <Users className="w-5 h-5 text-white" />
+          <CardContent className="p-3 sm:p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Total de Alunos</p>
-                <p className="text-2xl font-bold">{stats.total}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Total de Alunos</p>
+                <p className="text-xl sm:text-2xl font-bold">{stats.total}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
-                <FileText className="w-5 h-5 text-white" />
+          <CardContent className="p-3 sm:p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Com Avaliações</p>
-                <p className="text-2xl font-bold">{stats.studentsWithGrades}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Com Avaliações</p>
+                <p className="text-xl sm:text-2xl font-bold">{stats.studentsWithGrades}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Calculator className="w-5 h-5 text-white" />
+          <CardContent className="p-3 sm:p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Calculator className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Média Geral</p>
-                <p className="text-2xl font-bold">{stats.averageGrade.toFixed(1)}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Média Geral</p>
+                <p className="text-xl sm:text-2xl font-bold">{stats.averageGrade.toFixed(1)}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-white" />
+          <CardContent className="p-3 sm:p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">% Avaliados</p>
-                <p className="text-2xl font-bold">{stats.completionRate.toFixed(0)}%</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">% Avaliados</p>
+                <p className="text-xl sm:text-2xl font-bold">{stats.completionRate.toFixed(0)}%</p>
               </div>
             </div>
           </CardContent>
@@ -671,7 +673,7 @@ export const ReportsPage = () => {
           ) : (
             <>
               {/* Desktop Table - Consolidated Grade Report */}
-              <div className="hidden lg:block overflow-x-auto">
+              <div className="hidden md:block overflow-x-auto -mx-4 sm:mx-0">
                 {(() => {
                   // Para relatório individual, usar layout simplificado
                   if (reportType === "student" && reportData.length === 1) {
@@ -841,13 +843,13 @@ export const ReportsPage = () => {
               </div>
 
               {/* Mobile Cards */}
-              <div className="lg:hidden space-y-4">
+              <div className="md:hidden space-y-3">
                 {reportData.map((student, index) => (
-                  <Card key={index} className="p-4">
+                  <Card key={index} className="p-3">
                     <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h4 className="font-semibold text-foreground">{student.nome}</h4>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-foreground text-sm truncate">{student.nome}</h4>
+                        <p className="text-xs text-muted-foreground">
                           Nº {student.numero} | {student.classe} Classe
                         </p>
                       </div>
@@ -857,20 +859,21 @@ export const ReportsPage = () => {
                           student.status === "Reprovado" ? "destructive" : 
                           "secondary"
                         }
+                        className="text-xs ml-2 flex-shrink-0"
                       >
                         {student.status}
                       </Badge>
                     </div>
                     
-                    <div className="mb-3 pb-3 border-b border-border">
-                      <div className="text-sm">
+                    <div className="mb-3 pb-2 border-b border-border">
+                      <div className="text-xs sm:text-sm">
                         <span className="text-muted-foreground">Média Geral:</span>
-                        <span className="ml-2 text-xl font-bold">{student.media.toFixed(1)}</span>
+                        <span className="ml-2 text-lg sm:text-xl font-bold">{student.media.toFixed(1)}</span>
                       </div>
                     </div>
 
                     {student.notas.length > 0 ? (
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         {student.notas.map((disciplina, idx) => {
                           const mt1 = calculateMT(disciplina.trimestre1);
                           const mt2 = calculateMT(disciplina.trimestre2);
@@ -878,40 +881,40 @@ export const ReportsPage = () => {
                           const mfd = calculateMFD(disciplina);
                           
                           return (
-                            <div key={idx} className="border border-border rounded-lg p-3">
-                              <h5 className="font-semibold mb-2">{disciplina.disciplina}</h5>
-                              <div className="grid grid-cols-3 gap-2 text-xs">
+                            <div key={idx} className="border border-border rounded-lg p-2">
+                              <h5 className="font-semibold text-xs sm:text-sm mb-2">{disciplina.disciplina}</h5>
+                              <div className="grid grid-cols-3 gap-2 text-[10px] sm:text-xs">
                                 <div>
-                                  <p className="font-medium text-muted-foreground mb-1">1º Trim.</p>
+                                  <p className="font-medium text-muted-foreground mb-1">1º T.</p>
                                   <p>MAC: {disciplina.trimestre1.mac || '-'}</p>
                                   <p>NPP: {disciplina.trimestre1.npp || '-'}</p>
                                   <p>NPT: {disciplina.trimestre1.npt || '-'}</p>
-                                  <p className="font-bold text-primary mt-1">MT: {mt1.toFixed(1)}</p>
+                                  <p className="font-bold text-primary mt-1 text-xs">MT: {mt1.toFixed(1)}</p>
                                 </div>
                                 <div>
-                                  <p className="font-medium text-muted-foreground mb-1">2º Trim.</p>
+                                  <p className="font-medium text-muted-foreground mb-1">2º T.</p>
                                   <p>MAC: {disciplina.trimestre2.mac || '-'}</p>
                                   <p>NPP: {disciplina.trimestre2.npp || '-'}</p>
                                   <p>NPT: {disciplina.trimestre2.npt || '-'}</p>
-                                  <p className="font-bold text-primary mt-1">MT: {mt2.toFixed(1)}</p>
+                                  <p className="font-bold text-primary mt-1 text-xs">MT: {mt2.toFixed(1)}</p>
                                 </div>
                                 <div>
-                                  <p className="font-medium text-muted-foreground mb-1">3º Trim.</p>
+                                  <p className="font-medium text-muted-foreground mb-1">3º T.</p>
                                   <p>MAC: {disciplina.trimestre3.mac || '-'}</p>
                                   <p>NPP: {disciplina.trimestre3.npp || '-'}</p>
                                   <p>NPT: {disciplina.trimestre3.npt || '-'}</p>
-                                  <p className="font-bold text-primary mt-1">MT: {mt3.toFixed(1)}</p>
+                                  <p className="font-bold text-primary mt-1 text-xs">MT: {mt3.toFixed(1)}</p>
                                 </div>
                               </div>
                                 <div className="mt-2 pt-2 border-t border-border">
-                                  <span className="text-sm font-bold">MFD: {mfd.toFixed(1)}</span>
+                                  <span className="text-xs sm:text-sm font-bold">MFD: {mfd.toFixed(1)}</span>
                                 </div>
                             </div>
                           );
                         })}
                       </div>
                     ) : (
-                      <p className="text-sm text-muted-foreground text-center py-4">
+                      <p className="text-xs sm:text-sm text-muted-foreground text-center py-4">
                         Nenhuma disciplina cadastrada
                       </p>
                     )}

@@ -108,22 +108,23 @@ export const StudentsPage = () => {
       })();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">Gestão de Alunos</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Gestão de Alunos</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Cadastre e gerencie alunos do sistema escolar
           </p>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap sm:flex-nowrap">
           {students.length > 0 && (
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="sm">
+                <Button variant="destructive" size="sm" className="flex-1 sm:flex-none">
                   <Trash2 className="w-4 h-4 mr-2" />
-                  Limpar Todos
+                  <span className="hidden sm:inline">Limpar Todos</span>
+                  <span className="sm:hidden">Limpar</span>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
@@ -149,22 +150,23 @@ export const StudentsPage = () => {
           
           <Button 
             onClick={() => navigate("/add-student")}
-            className="bg-primary hover:bg-primary-glow"
+            className="bg-primary hover:bg-primary-glow flex-1 sm:flex-none"
           >
             <UserPlus className="w-4 h-4 mr-2" />
-            Novo Aluno
+            <span className="hidden sm:inline">Novo Aluno</span>
+            <span className="sm:hidden">Novo</span>
           </Button>
         </div>
       </div>
 
       {/* Busca Global */}
-      <div className="relative max-w-md">
+      <div className="relative w-full sm:max-w-md">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
         <Input
           placeholder="Buscar alunos..."
           value={globalSearch}
           onChange={(e) => setGlobalSearch(e.target.value)}
-          className="pl-10"
+          className="pl-10 w-full"
         />
       </div>
 

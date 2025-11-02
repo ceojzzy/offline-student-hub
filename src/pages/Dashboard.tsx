@@ -25,17 +25,17 @@ const Dashboard = () => {
   const classDistribution = getClassDistribution();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+        <p className="text-sm md:text-base text-muted-foreground">
           Visão geral do sistema de gestão escolar
         </p>
       </div>
 
       <StatsCards students={students} />
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         {/* Distribuição por Classes */}
         <Card>
           <CardHeader>
@@ -86,15 +86,15 @@ const Dashboard = () => {
             ) : (
               <div className="space-y-3">
                 {recentStudents.map((student) => (
-                  <div key={student.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+                  <div key={student.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-muted/30 gap-2">
                     <div>
-                      <p className="font-medium text-foreground">{student.nome}</p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="font-medium text-foreground text-sm md:text-base">{student.nome}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">
                         {student.classe} / Turma {student.turma} • Nº {student.numero}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-sm text-muted-foreground">{student.curso}</p>
+                    <div className="sm:text-right">
+                      <p className="text-xs md:text-sm text-muted-foreground">{student.curso}</p>
                       <p className="text-xs text-muted-foreground">{student.periodo}</p>
                     </div>
                   </div>

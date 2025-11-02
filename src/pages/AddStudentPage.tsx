@@ -31,21 +31,21 @@ export const AddStudentPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center space-x-4">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate(-1)}
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 self-start"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Voltar</span>
         </Button>
         
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Cadastrar Novo Aluno</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Cadastrar Novo Aluno</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
             Preencha os dados do aluno para cadastrá-lo no sistema
           </p>
         </div>

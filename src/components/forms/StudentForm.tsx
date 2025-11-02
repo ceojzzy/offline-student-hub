@@ -46,25 +46,25 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
   if (!isOpen) return null;
 
   return (
-    <Card className="mb-6 border border-border shadow-sm">
-      <CardHeader className="pb-4">
+    <Card className="mb-4 md:mb-6 border border-border shadow-sm">
+      <CardHeader className="pb-3 md:pb-4 p-3 sm:p-4 md:p-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
-              <UserPlus className="w-4 h-4 text-primary-foreground" />
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
+              <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-foreground" />
             </div>
-            <CardTitle className="text-lg">Cadastrar Novo Aluno</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Cadastrar Novo Aluno</CardTitle>
           </div>
-          <Button variant="ghost" size="sm" onClick={onCancel}>
-            <X className="w-4 h-4" />
+          <Button variant="ghost" size="sm" onClick={onCancel} className="h-7 w-7 sm:h-8 sm:w-8 p-0">
+            <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Button>
         </div>
       </CardHeader>
       
-      <CardContent>
+      <CardContent className="p-3 sm:p-4 md:p-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-3 md:space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               <FormField
                 control={form.control}
                 name="nome"
@@ -178,11 +178,11 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen }: StudentFormProps) =>
               />
             </div>
 
-            <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3 pt-4">
-              <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-2 md:pt-4">
+              <Button type="button" variant="outline" onClick={onCancel} className="w-full sm:w-auto order-2 sm:order-1">
                 Cancelar
               </Button>
-              <Button type="submit" className="bg-primary hover:bg-primary-glow w-full sm:w-auto">
+              <Button type="submit" className="bg-primary hover:bg-primary-glow w-full sm:w-auto order-1 sm:order-2">
                 Salvar Aluno
               </Button>
             </div>

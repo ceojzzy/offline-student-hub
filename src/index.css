@@ -145,12 +145,31 @@ Todas as cores DEVEM ser HSL.
     select {
       font-size: 16px;
     }
+
+    /* Melhorar área de toque em mobile */
+    button,
+    a {
+      min-height: 44px;
+      min-width: 44px;
+    }
   }
 
   /* Melhor suporte a touch */
   @media (hover: none) {
     .hover\:bg-muted\/30:hover {
       background-color: transparent;
+    }
+  }
+
+  /* Scroll suave */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Melhor visualização de overflow em tabelas */
+  @media (max-width: 768px) {
+    .overflow-x-auto {
+      -webkit-overflow-scrolling: touch;
     }
   }
 }
