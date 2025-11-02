@@ -30,6 +30,11 @@ const Index = () => {
                 {getPageTitle()}
               </h1>
             </div>
+            <img 
+              src="/logo-escolar/logo100.png" 
+              alt="Logo Escola Nova Geração" 
+              className="h-10 w-10 object-contain"
+            />
           </header>
 
           {/* Main content */}

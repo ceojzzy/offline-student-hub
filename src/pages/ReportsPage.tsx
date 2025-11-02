@@ -230,9 +230,10 @@ export const ReportsPage = () => {
             <title>Relatório Individual - ${student?.nome || ''}</title>
             <style>
               body { font-family: Arial, sans-serif; margin: 20px; font-size: 11px; }
-              .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 15px; }
+              .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 15px; position: relative; }
               .header-top { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
               .emblem { width: 60px; height: 60px; }
+              .school-logo { width: 80px; height: 80px; position: absolute; right: 0; top: 0; }
               .header-text { text-align: center; }
               .country-name { font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
               .school-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
@@ -252,6 +253,7 @@ export const ReportsPage = () => {
           </head>
           <body>
             <div class="header">
+              <img src="/logo-escolar/logo100.png" alt="Logo Escola" class="school-logo" />
               <div class="header-top">
                 <img src="/ra.webp" alt="Insígnia de Angola" class="emblem" />
                 <div class="header-text">
@@ -315,9 +317,10 @@ export const ReportsPage = () => {
           <title>Relatório de Notas - ${reportTitle}</title>
           <style>
             body { font-family: Arial, sans-serif; margin: 20px; font-size: 10px; }
-            .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 15px; }
+            .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 15px; position: relative; }
             .header-top { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
             .emblem { width: 60px; height: 60px; }
+            .school-logo { width: 80px; height: 80px; position: absolute; right: 0; top: 0; }
             .header-text { text-align: center; }
             .country-name { font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
             .school-name { font-size: 16px; font-weight: bold; margin-bottom: 5px; }
@@ -339,6 +342,7 @@ export const ReportsPage = () => {
         </head>
         <body>
           <div class="header">
+            <img src="/logo-escolar/logo100.png" alt="Logo Escola" class="school-logo" />
             <div class="header-top">
               <img src="/ra.webp" alt="Insígnia de Angola" class="emblem" />
               <div class="header-text">
