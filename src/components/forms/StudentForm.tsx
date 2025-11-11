@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { StudentFormData } from "@/types/student";
 import { UserPlus, X } from "lucide-react";
+import { ComboboxField } from "./ComboboxField";
 
 const studentFormSchema = z.object({
   nome: z.string().min(1, "Nome é obrigatório").max(100, "Nome muito longo"),
@@ -101,32 +102,16 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen, existingClasses = [], 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Classe</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione a classe" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {existingClasses.length > 0 ? (
-                          existingClasses.map((classe) => (
-                            <SelectItem key={classe} value={classe}>
-                              {classe}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="7ª">7ª</SelectItem>
-                            <SelectItem value="8ª">8ª</SelectItem>
-                            <SelectItem value="9ª">9ª</SelectItem>
-                            <SelectItem value="10ª">10ª</SelectItem>
-                            <SelectItem value="11ª">11ª</SelectItem>
-                            <SelectItem value="12ª">12ª</SelectItem>
-                            <SelectItem value="13ª">13ª</SelectItem>
-                          </>
-                        )}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <ComboboxField
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        options={existingClasses.length > 0 ? existingClasses : ["7ª", "8ª", "9ª", "10ª", "11ª", "12ª", "13ª"]}
+                        placeholder="Selecione ou digite a classe"
+                        searchPlaceholder="Buscar ou digitar classe..."
+                        emptyText="Digite a classe desejada"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -138,31 +123,16 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen, existingClasses = [], 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Turma</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione a turma" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {existingTurmas.length > 0 ? (
-                          existingTurmas.map((turma) => (
-                            <SelectItem key={turma} value={turma}>
-                              {turma}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <>
-                            <SelectItem value="A">A</SelectItem>
-                            <SelectItem value="B">B</SelectItem>
-                            <SelectItem value="C">C</SelectItem>
-                            <SelectItem value="D">D</SelectItem>
-                            <SelectItem value="E">E</SelectItem>
-                            <SelectItem value="F">F</SelectItem>
-                          </>
-                        )}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <ComboboxField
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        options={existingTurmas.length > 0 ? existingTurmas : ["A", "B", "C", "D", "E", "F"]}
+                        placeholder="Selecione ou digite a turma"
+                        searchPlaceholder="Buscar ou digitar turma..."
+                        emptyText="Digite a turma desejada"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -174,20 +144,22 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen, existingClasses = [], 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Curso</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o curso" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Ciências Físicas e Biológicas">Ciências Físicas e Biológicas</SelectItem>
-                        <SelectItem value="Ciências Económicas e Jurídicas">Ciências Económicas e Jurídicas</SelectItem>
-                        <SelectItem value="Ciências Humanas">Ciências Humanas</SelectItem>
-                        <SelectItem value="Artes Visuais">Artes Visuais</SelectItem>
-                        <SelectItem value="Ensino Geral">Ensino Geral</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <ComboboxField
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        options={[
+                          "Ciências Físicas e Biológicas",
+                          "Ciências Económicas e Jurídicas",
+                          "Ciências Humanas",
+                          "Artes Visuais",
+                          "Ensino Geral"
+                        ]}
+                        placeholder="Selecione ou digite o curso"
+                        searchPlaceholder="Buscar ou digitar curso..."
+                        emptyText="Digite o curso desejado"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
