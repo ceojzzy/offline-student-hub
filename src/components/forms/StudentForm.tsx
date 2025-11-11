@@ -101,32 +101,32 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen, existingClasses = [], 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Classe</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input 
-                          placeholder="Digite ou selecione a classe" 
-                          list="classes-list"
-                          {...field} 
-                        />
-                        <datalist id="classes-list">
-                          {existingClasses.length > 0 ? (
-                            existingClasses.map((classe) => (
-                              <option key={classe} value={classe} />
-                            ))
-                          ) : (
-                            <>
-                              <option value="7ª" />
-                              <option value="8ª" />
-                              <option value="9ª" />
-                              <option value="10ª" />
-                              <option value="11ª" />
-                              <option value="12ª" />
-                              <option value="13ª" />
-                            </>
-                          )}
-                        </datalist>
-                      </div>
-                    </FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a classe" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {existingClasses.length > 0 ? (
+                          existingClasses.map((classe) => (
+                            <SelectItem key={classe} value={classe}>
+                              {classe}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <>
+                            <SelectItem value="7ª">7ª</SelectItem>
+                            <SelectItem value="8ª">8ª</SelectItem>
+                            <SelectItem value="9ª">9ª</SelectItem>
+                            <SelectItem value="10ª">10ª</SelectItem>
+                            <SelectItem value="11ª">11ª</SelectItem>
+                            <SelectItem value="12ª">12ª</SelectItem>
+                            <SelectItem value="13ª">13ª</SelectItem>
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -138,31 +138,31 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen, existingClasses = [], 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Turma</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input 
-                          placeholder="Digite ou selecione a turma" 
-                          list="turmas-list"
-                          {...field} 
-                        />
-                        <datalist id="turmas-list">
-                          {existingTurmas.length > 0 ? (
-                            existingTurmas.map((turma) => (
-                              <option key={turma} value={turma} />
-                            ))
-                          ) : (
-                            <>
-                              <option value="A" />
-                              <option value="B" />
-                              <option value="C" />
-                              <option value="D" />
-                              <option value="E" />
-                              <option value="F" />
-                            </>
-                          )}
-                        </datalist>
-                      </div>
-                    </FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a turma" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {existingTurmas.length > 0 ? (
+                          existingTurmas.map((turma) => (
+                            <SelectItem key={turma} value={turma}>
+                              {turma}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <>
+                            <SelectItem value="A">A</SelectItem>
+                            <SelectItem value="B">B</SelectItem>
+                            <SelectItem value="C">C</SelectItem>
+                            <SelectItem value="D">D</SelectItem>
+                            <SelectItem value="E">E</SelectItem>
+                            <SelectItem value="F">F</SelectItem>
+                          </>
+                        )}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -174,9 +174,20 @@ export const StudentForm = ({ onSubmit, onCancel, isOpen, existingClasses = [], 
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Curso</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ex: Ciências Naturais" {...field} />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o curso" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Ciências Físicas e Biológicas">Ciências Físicas e Biológicas</SelectItem>
+                        <SelectItem value="Ciências Económicas e Jurídicas">Ciências Económicas e Jurídicas</SelectItem>
+                        <SelectItem value="Ciências Humanas">Ciências Humanas</SelectItem>
+                        <SelectItem value="Artes Visuais">Artes Visuais</SelectItem>
+                        <SelectItem value="Ensino Geral">Ensino Geral</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
